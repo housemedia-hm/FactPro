@@ -1,0 +1,2704 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <title>FactPro | Bienvenido</title>
+  <style>
+    :root {
+      --ink: #13151c;
+      --ink-2: #252a35;
+      --muted: #707684;
+      --line: #e7e9ee;
+      --surface: #f5f6f8;
+      --white: #ffffff;
+      --success: #157347;
+      --danger: #b42318;
+      --radius: 18px;
+      --shadow: 0 18px 48px rgba(19, 21, 28, .08);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--surface); }
+    body { margin: 0; min-height: 100vh; overflow-x: hidden; color: var(--ink); background: var(--surface); }
+    button, input, textarea, select { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+      outline: 3px solid rgba(19, 21, 28, .18);
+      outline-offset: 2px;
+    }
+
+    .app-shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 26px 18px;
+      color: var(--white);
+      background: var(--ink);
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 2px 8px 20px; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: var(--white);
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      letter-spacing: -.08em;
+    }
+    .brand-mark img { display: block; width: 29px; height: 29px; object-fit: contain; }
+    .brand strong { display: block; font-size: 15px; }
+    .brand span { display: block; margin-top: 2px; color: rgba(255,255,255,.58); font-size: 11px; }
+    .nav-label { padding: 0 10px; color: rgba(255,255,255,.42); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .nav { display: grid; gap: 6px; }
+    .nav-button {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px;
+      color: rgba(255,255,255,.68);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-align: left;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .nav-button:hover, .nav-button.active { color: var(--white); background: rgba(255,255,255,.1); }
+    .nav-icon { width: 22px; text-align: center; font-size: 17px; }
+    .main { min-width: 0; }
+    .topbar {
+      min-height: 86px;
+      padding: 20px 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.85);
+      backdrop-filter: blur(16px);
+    }
+    .topbar h1 { margin: 0; font-size: 20px; letter-spacing: -.03em; }
+    .topbar p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--muted);
+      font-size: 11px;
+      font-family: inherit;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .status-pill:hover, .status-pill[aria-expanded="true"] { color: var(--ink); background: #f6f7f8; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+    .user-menu { position: relative; }
+    .user-menu-chevron { color: #9a9faa; font-size: 10px; transition: transform .18s ease; }
+    .status-pill[aria-expanded="true"] .user-menu-chevron { transform: rotate(180deg); }
+    .user-dropdown { position: absolute; top: calc(100% + 8px); right: 0; z-index: 90; display: none; width: 170px; padding: 7px; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: 0 16px 40px rgba(19,21,28,.14); }
+    .user-dropdown.visible { display: block; animation: enter .18s ease; }
+    .user-dropdown button { width: 100%; min-height: 36px; padding: 0 10px; border: 0; border-radius: 8px; display: flex; align-items: center; gap: 9px; color: #8b2c25; background: transparent; font: inherit; font-size: 10px; font-weight: 700; text-align: left; cursor: pointer; }
+    .user-dropdown button:hover { background: #fff0ef; }
+    .content { padding: 34px; }
+    .view { display: none; }
+    .view.active { display: block; animation: enter .28s ease; }
+    @keyframes enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+    .hero {
+      padding: 34px;
+      border-radius: 24px;
+      color: var(--white);
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      right: -150px;
+      top: -190px;
+      border: 54px solid rgba(255,255,255,.06);
+      border-radius: 50%;
+    }
+    .eyebrow { margin: 0 0 12px; color: rgba(255,255,255,.55); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .hero h2 { max-width: 650px; margin: 0; font-size: clamp(28px, 4vw, 46px); line-height: 1.05; letter-spacing: -.055em; }
+    .hero p { max-width: 620px; margin: 17px 0 0; color: rgba(255,255,255,.65); line-height: 1.65; font-size: 13px; }
+
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin: 32px 0 16px; }
+    .section-head h3 { margin: 0; font-size: 17px; letter-spacing: -.02em; }
+    .section-head p { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+    .doc-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .doc-card {
+      padding: 22px;
+      min-height: 218px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: 0 10px 30px rgba(19,21,28,.035);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .doc-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: #cfd2da; }
+    .card-icon { width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; background: var(--surface); font-size: 20px; }
+    .doc-card h4 { margin: 18px 0 7px; font-size: 16px; }
+    .doc-card p { margin: 0; color: var(--muted); line-height: 1.55; font-size: 12px; }
+    .card-action { margin-top: auto; padding-top: 18px; font-size: 12px; font-weight: 800; }
+
+    .workspace-header { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
+    .workspace-title { display: flex; align-items: center; gap: 12px; }
+    .back-button, .icon-button, .secondary-button, .primary-button, .danger-button {
+      border: 0;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+    .back-button, .icon-button { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; background: var(--white); box-shadow: 0 0 0 1px var(--line); }
+    .back-button:hover, .icon-button:hover { background: #eceef2; }
+    .workspace-title h2 { margin: 0; font-size: 19px; letter-spacing: -.03em; }
+    .workspace-title p { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
+    .workspace-actions { display: flex; gap: 9px; }
+    .primary-button, .secondary-button, .danger-button { min-height: 40px; padding: 0 15px; border-radius: 11px; font-size: 12px; font-weight: 800; }
+    .primary-button { color: var(--white); background: var(--ink); }
+    .primary-button:hover { background: #2a2e38; transform: translateY(-1px); }
+    .secondary-button { background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+    .secondary-button:hover { background: #f0f1f4; }
+    .danger-button { color: var(--danger); background: #fff1f0; }
+    .danger-button:hover { background: #ffe5e2; }
+
+    .workspace-grid { display: grid; grid-template-columns: minmax(360px, 0.82fr) minmax(560px, 1.18fr); gap: 18px; align-items: start; }
+    .editor, .preview-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); box-shadow: 0 12px 34px rgba(19,21,28,.035); }
+    .editor { overflow: hidden; }
+    .panel-head { padding: 17px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); }
+    .panel-head h3 { margin: 0; font-size: 13px; }
+    .panel-head span { color: var(--muted); font-size: 10px; }
+    .editor-scroll { max-height: calc(100vh - 205px); overflow: auto; padding: 20px; }
+    .form-section + .form-section { margin-top: 26px; padding-top: 24px; border-top: 1px solid var(--line); }
+    .form-section-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .form-section h4 { margin: 0; font-size: 12px; letter-spacing: .01em; }
+    .form-section small { color: var(--muted); font-size: 10px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .field { display: grid; gap: 6px; min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { color: #4e5360; font-size: 10px; font-weight: 700; }
+    .field input, .field textarea, .field select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid #dfe2e8;
+      border-radius: 10px;
+      padding: 10px 11px;
+      color: var(--ink);
+      background: var(--white);
+      font-size: 12px;
+      transition: .18s ease;
+    }
+    .field textarea { resize: vertical; min-height: 82px; line-height: 1.5; }
+    .field input:hover, .field textarea:hover, .field select:hover { border-color: #bdc1cb; }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--ink); outline: none; box-shadow: 0 0 0 3px rgba(19,21,28,.08); }
+    .file-field { position: relative; min-height: 74px; border: 1px dashed #cfd3dc; border-radius: 11px; display: grid; place-items: center; text-align: center; overflow: hidden; }
+    .file-field input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .file-field span { padding: 12px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .file-field strong { color: var(--ink); }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+    .toggle-copy strong { display: block; font-size: 11px; }
+    .toggle-copy span { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .switch { position: relative; width: 42px; height: 24px; flex: 0 0 auto; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch span { position: absolute; inset: 0; border-radius: 999px; background: #d5d8df; cursor: pointer; transition: .2s; }
+    .switch span::after { content: ""; position: absolute; width: 18px; height: 18px; top: 3px; left: 3px; border-radius: 50%; background: white; box-shadow: 0 2px 5px rgba(0,0,0,.15); transition: .2s; }
+    .switch input:checked + span { background: var(--ink); }
+    .switch input:checked + span::after { transform: translateX(18px); }
+
+    .item-list, .script-list, .gallery-category-list, .payment-proof-list { display: grid; gap: 10px; }
+    .item-card, .script-card, .gallery-category-card, .payment-proof-card { padding: 13px; border: 1px solid var(--line); border-radius: 12px; background: #fafbfc; }
+    .item-top, .script-top, .optional-card-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 11px; }
+    .item-index { font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .remove-mini { border: 0; background: transparent; color: var(--danger); font-size: 10px; font-weight: 800; cursor: pointer; }
+    .item-grid { display: grid; grid-template-columns: minmax(0, 1fr) 74px 92px; gap: 9px; }
+    .item-grid .description-field { grid-column: 1 / -1; }
+    .add-button { width: 100%; margin-top: 10px; min-height: 38px; border: 1px dashed #cfd3dc; border-radius: 11px; color: #555b68; background: transparent; cursor: pointer; font-size: 11px; font-weight: 800; }
+    .add-button:hover { border-color: var(--ink); color: var(--ink); background: #f6f7f9; }
+    .editor-summary { display: grid; gap: 7px; padding: 13px; margin-top: 12px; border-radius: 11px; background: var(--ink); color: white; }
+    .editor-summary-row { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; }
+    .editor-summary-row.total { padding-top: 8px; margin-top: 2px; border-top: 1px solid rgba(255,255,255,.14); font-size: 13px; font-weight: 900; }
+    .script-fields, .optional-fields { display: none; margin-top: 16px; }
+    .script-fields.visible, .optional-fields.visible { display: block; }
+    .image-upload-box { position: relative; min-height: 68px; border: 1px dashed #cfd3dc; border-radius: 10px; display: grid; place-items: center; text-align: center; color: var(--muted); background: white; font-size: 10px; overflow: hidden; }
+    .image-upload-box input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .image-upload-box strong { display: block; color: var(--ink); font-size: 11px; }
+    .editor-thumbnails { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; margin-top: 10px; }
+    .editor-thumbnail { position: relative; min-width: 0; aspect-ratio: 1 / 1; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: white; }
+    .editor-thumbnail img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .editor-thumbnail button { position: absolute; top: 4px; right: 4px; width: 21px; height: 21px; border: 0; border-radius: 50%; color: white; background: rgba(19,21,28,.82); cursor: pointer; font-size: 12px; line-height: 1; }
+    .proof-image-preview { margin-top: 10px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: white; }
+    .proof-image-preview img { display: block; width: 100%; height: 150px; object-fit: contain; }
+
+    .preview-panel { position: sticky; top: 18px; overflow: hidden; }
+    .preview-toolbar { min-height: 54px; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); }
+    .preview-toolbar strong { font-size: 12px; }
+    .preview-toolbar span { color: var(--muted); font-size: 10px; }
+    .preview-stage { max-height: calc(100vh - 185px); overflow: auto; padding: 26px; background: #e9ebef; }
+    .print-document { display: grid; justify-content: center; gap: 22px; }
+    @media screen { .preview-stage .print-document { zoom: .68; } }
+    .print-page {
+      width: 8.5in;
+      min-height: 11in;
+      padding: .72in .68in .6in;
+      background: white;
+      color: #111;
+      box-shadow: 0 14px 40px rgba(19,21,28,.12);
+      font-family: Arial, Helvetica, sans-serif;
+      position: relative;
+    }
+    .preview-stage .print-page { transform-origin: top center; }
+
+    .pdf-cover { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .cover-logo { width: 285px; max-height: 245px; object-fit: contain; filter: brightness(0) saturate(100%); opacity: .404; }
+    .cover-center { position: absolute; left: 50%; top: 48%; transform: translate(-50%, -50%); }
+    .cover-footer { position: absolute; left: .68in; right: .68in; bottom: .62in; color: #989898; font-size: 15px; line-height: 1.55; }
+    .cover-footer a { display: block; color: #989898; text-decoration: none; font-size: 18px; }
+
+    .script-page { padding-top: .72in; line-height: 1.43; }
+    .script-page h1 { margin: 0 0 2px; font-size: 26px; line-height: 1.2; }
+    .script-duration { margin: 0 0 28px; font-size: 16px; }
+    .script-block { margin-bottom: 24px; break-inside: avoid; }
+    .script-block h2 { margin: 0 0 7px; font-size: 16px; }
+    .script-block p { margin: 0; white-space: pre-wrap; font-size: 14px; }
+
+    .doc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+    .doc-logo { width: 118px; height: 104px; object-fit: contain; object-position: left top; transform: translateY(-8px); }
+    .business-info { text-align: right; color: #344054; font-size: 14px; line-height: 1.32; }
+    .business-info strong { display: block; color: #111; font-size: 18px; }
+    .document-title-row { margin: 24px 0 21px; padding-bottom: 20px; border-bottom: 2px solid #efefef; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .document-title { margin: 0; font-size: 23px; }
+    .status-separator { color: #8a8f99; font-size: 20px; }
+    .status-badge { display: inline-flex; align-items: center; gap: 6px; min-height: 27px; padding: 5px 10px; border-radius: 999px; color: white; font-size: 11px; font-weight: 800; letter-spacing: .01em; }
+    .status-badge.paid { background: #3f7f5c; }
+    .status-badge.active { background: #2b715a; }
+    .status-badge.pending { background: #263650; }
+    .status-badge.overdue { background: #b74747; }
+    .document-payment-detail { display: inline-flex; align-items: center; min-height: 25px; padding: 5px 9px; border-radius: 7px; color: #353b47; background: #f0f2f5; font-size: 10px; font-weight: 700; }
+    .document-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 38px; margin: 0 6px 46px; }
+    .meta-block { color: #344054; font-size: 14px; line-height: 1.28; }
+    .meta-block.right { text-align: right; }
+    .meta-block strong { display: block; color: #172033; font-size: 14px; }
+    .doc-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 14px; }
+    .doc-table col.num { width: 8%; }
+    .doc-table col.description { width: 57%; }
+    .doc-table col.qty { width: 12%; }
+    .doc-table col.price { width: 23%; }
+    .doc-table th { padding: 0 6px 10px; border-bottom: 2px solid #ddd; text-align: left; font-size: 15px; }
+    .doc-table th:nth-child(3), .doc-table th:nth-child(4), .doc-table td:nth-child(3), .doc-table td:nth-child(4) { text-align: right; }
+    .doc-table td { padding: 9px 6px 3px; vertical-align: top; }
+    .line-title { font-weight: 700; }
+    .line-description { margin-top: 3px; white-space: pre-wrap; line-height: 1.28; }
+    .totals-wrap { width: 215px; margin: 48px 0 0 auto; font-size: 14px; }
+    .total-line { display: grid; grid-template-columns: minmax(0, 1fr) 84px; align-items: center; gap: 12px; padding: 5px 10px; }
+    .total-line strong { font-weight: 700; text-align: right; }
+    .total-line span { text-align: right; }
+    .total-line.grand { color: white !important; background: #242a35 !important; box-shadow: inset 0 0 0 1000px #242a35; font-size: 15px; }
+    .doc-note { max-width: 60%; margin: -30px 0 0 35px; white-space: pre-wrap; font-size: 13px; line-height: 1.4; }
+    .doc-footer { position: absolute; left: .68in; right: .68in; bottom: .48in; display: flex; align-items: center; justify-content: space-between; }
+    .signature-image { width: 122px; height: 72px; object-fit: contain; object-position: left bottom; }
+    .qr-link { display: block; color: inherit; text-decoration: none; line-height: 0; }
+    .qr-image { width: 48px; height: 48px; object-fit: contain; }
+    .signature-placeholder { width: 150px; padding-top: 20px; border-top: 1px solid #222; color: #555; font-size: 10px; text-align: center; }
+    .empty-state { padding: 18px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); text-align: center; font-size: 11px; }
+
+    .gallery-page, .payment-proofs-page { height: 11in; min-height: 11in; max-height: 11in; overflow: hidden; padding: .58in .55in; }
+    .gallery-page { display: flex; flex-direction: column; }
+    .appendix-kicker { margin: 0 0 6px; color: #737986; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .appendix-title { margin: 0; font-size: 23px; letter-spacing: -.03em; }
+    .appendix-head { flex: 0 0 auto; margin-bottom: 24px; padding-bottom: 13px; border-bottom: 2px solid #eeeeef; }
+    .gallery-categories { --category-count: 1; flex: 1 1 auto; min-height: 0; display: grid; grid-template-rows: repeat(var(--category-count), minmax(0, 1fr)); gap: 22px; }
+    .gallery-category { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 10px; overflow: hidden; }
+    .gallery-category h2 { margin: 0; font-size: 17px; line-height: 1.15; text-transform: uppercase; }
+    .gallery-image-grid { --image-count: 1; min-height: 0; display: grid; grid-template-columns: repeat(var(--image-count), minmax(0, 1fr)); gap: 7px; align-items: stretch; }
+    .gallery-image-frame { min-width: 0; min-height: 0; display: grid; place-items: center; overflow: hidden; background: #f7f7f8; }
+    .gallery-image-frame img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+    .gallery-categories.dense { gap: 13px; }
+    .gallery-categories.dense .gallery-category { gap: 6px; }
+    .gallery-categories.dense .gallery-category h2 { font-size: 13px; }
+    .gallery-image-grid.dense { gap: 4px; }
+    .appendix-empty { height: 100%; display: grid; place-items: center; border: 1px dashed #d6d9df; color: #777d88; font-size: 13px; }
+
+    .payment-proofs-page { display: flex; flex-direction: column; }
+    .payment-summary { flex: 0 0 auto; margin-bottom: 24px; font-weight: 600; line-height: 1.06; }
+    .payment-summary-total { color: #929292; font-size: 20px; }
+    .payment-summary-sent { color: #46bd7d; font-size: 20px; }
+    .payment-summary-pending { display: inline-block; margin-top: 3px; padding: 4px 8px 5px; color: white; background: #111; font-size: 23px; }
+    .payment-proof-grid { --proof-columns: 1; flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: repeat(var(--proof-columns), minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 18px; overflow: hidden; }
+    .payment-proof { min-height: 0; padding: 13px; border: 1px solid #e5e6e9; border-radius: 8px; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 10px; overflow: hidden; }
+    .payment-proof h2 { margin: 0; font-size: 14px; line-height: 1.25; text-transform: uppercase; }
+    .payment-proof-image { min-height: 0; display: grid; place-items: center; overflow: hidden; background: #fafafa; }
+    .payment-proof-image img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+    .payment-proof-no-image { color: #8a8f99; font-size: 10px; }
+    .payment-proof-data { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 12px; padding-top: 9px; border-top: 1px solid #e4e5e8; color: #505560; font-size: 9.5px; line-height: 1.35; }
+    .payment-proof-data span { min-width: 0; overflow-wrap: anywhere; }
+    .payment-proof-data strong { display: block; color: #17191f; font-size: 9px; }
+
+    .documents-toolbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
+    .documents-toolbar-copy h3 { margin: 0; font-size: 18px; letter-spacing: -.025em; }
+    .documents-toolbar-copy p { margin: 5px 0 0; color: var(--muted); font-size: 11px; }
+    .documents-toolbar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .archive-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .archive-summary-card { padding: 15px; border: 1px solid var(--line); border-radius: 13px; background: white; }
+    .archive-summary-card span { display: block; color: var(--muted); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+    .archive-summary-card strong { display: block; margin-top: 5px; font-size: 19px; letter-spacing: -.03em; }
+    .archive-filters { display: grid; grid-template-columns: minmax(180px, 1.4fr) repeat(4, minmax(120px, .7fr)) auto; gap: 9px; padding: 14px; border-bottom: 1px solid var(--line); }
+    .archive-filter { display: grid; gap: 5px; }
+    .archive-filter label { color: var(--muted); font-size: 9px; font-weight: 700; }
+    .archive-filter input, .archive-filter select { width: 100%; min-height: 38px; padding: 8px 10px; border: 1px solid #dfe2e8; border-radius: 9px; background: white; color: var(--ink); font-size: 11px; }
+    .archive-table-wrap { overflow-x: auto; }
+    .archive-table { width: 100%; min-width: 820px; border-collapse: collapse; }
+    .archive-table th { padding: 12px 14px; color: var(--muted); background: #fafbfc; border-bottom: 1px solid var(--line); text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: .07em; }
+    .archive-table td { padding: 13px 14px; border-bottom: 1px solid var(--line); font-size: 11px; vertical-align: middle; }
+    .archive-table tbody tr:hover { background: #fafbfc; }
+    .archive-document-name strong { display: block; font-size: 12px; }
+    .archive-document-name span { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; }
+    .archive-status { display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border-radius: 999px; color: white; font-size: 9px; font-weight: 800; }
+    .archive-status.none { color: #666c78; background: #eef0f3; }
+    .archive-status.paid { background: #3f7f5c; }
+    .archive-status.active { background: #2b715a; }
+    .archive-status.pending { background: #263650; }
+    .archive-status.overdue { background: #b74747; }
+    .archive-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .archive-action { min-height: 30px; padding: 0 9px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--ink); cursor: pointer; font-size: 9px; font-weight: 800; }
+    .archive-action:hover { background: #f0f1f4; }
+    .archive-action.delete { color: var(--danger); background: #fff5f4; }
+    .archive-empty { padding: 48px 20px; color: var(--muted); text-align: center; font-size: 12px; }
+    .storage-note { margin-top: 12px; padding: 12px 14px; border-radius: 11px; color: #4f5967; background: #eef3f0; font-size: 10px; line-height: 1.5; }
+
+    .archive-preview-modal { position: fixed; inset: 0; z-index: 180; display: none; grid-template-rows: auto minmax(0, 1fr); background: rgba(19,21,28,.94); }
+    .archive-preview-modal.visible { display: grid; }
+    .archive-preview-toolbar { min-height: 68px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; color: white; background: var(--ink); border-bottom: 1px solid rgba(255,255,255,.12); }
+    .archive-preview-toolbar h3 { margin: 0; font-size: 15px; }
+    .archive-preview-toolbar p { margin: 4px 0 0; color: rgba(255,255,255,.58); font-size: 10px; }
+    .archive-preview-toolbar-actions { display: flex; gap: 8px; }
+    .archive-preview-toolbar .secondary-button { color: var(--ink); }
+    .archive-preview-stage { min-height: 0; overflow: auto; padding: 28px; background: #dfe2e7; }
+    .archive-preview-document { display: grid; justify-content: center; gap: 22px; zoom: .72; }
+
+    .import-layout { display: grid; grid-template-columns: minmax(320px, .75fr) minmax(420px, 1.25fr); gap: 18px; align-items: start; }
+    .drop-zone { position: relative; min-height: 190px; border: 1.5px dashed #c9cdd6; border-radius: 16px; background: #fafbfc; display: grid; place-items: center; text-align: center; transition: .2s ease; overflow: hidden; }
+    .drop-zone:hover, .drop-zone.dragging { border-color: var(--ink); background: #f2f3f6; }
+    .drop-zone input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .drop-zone-copy { padding: 28px; pointer-events: none; }
+    .drop-zone-icon { width: 48px; height: 48px; margin: 0 auto 13px; border-radius: 14px; display: grid; place-items: center; color: white; background: var(--ink); font-size: 21px; }
+    .drop-zone strong { display: block; font-size: 13px; }
+    .drop-zone span { display: block; margin-top: 7px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .pdf-status { display: none; margin-top: 14px; padding: 14px; border-radius: 12px; background: #f2f7f4; color: #315c45; font-size: 11px; line-height: 1.55; }
+    .pdf-status.visible { display: block; }
+    .pdf-status.error { color: #8b2c25; background: #fff0ef; }
+    .pdf-config { display: none; }
+    .pdf-config.visible { display: block; }
+    .page-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .page-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+    .page-option { position: relative; min-height: 92px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: white; cursor: pointer; transition: .18s ease; }
+    .page-option:hover { border-color: #bbc0ca; }
+    .page-option input { position: absolute; right: 10px; top: 10px; accent-color: var(--ink); }
+    .page-option strong { display: block; margin-top: 30px; font-size: 12px; }
+    .page-option span { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; }
+    .validation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px,1fr)); gap: 9px; margin: 14px 0 18px; }
+    .validation-card { padding: 12px; border: 1px solid var(--line); border-radius: 11px; }
+    .validation-card span { display: block; color: var(--muted); font-size: 9px; }
+    .validation-card strong { display: block; margin-top: 5px; font-size: 11px; word-break: break-word; }
+    .validation-card.status-card { color: white; border-color: transparent; }
+    .validation-card.status-card span { color: rgba(255,255,255,.72); }
+    .validation-card.status-card.active { background: #2b715a; }
+    .validation-card.status-card.paid { background: #3f7f5c; }
+    .validation-card.status-card.pending { background: #263650; }
+    .validation-card.status-card.overdue { background: #b74747; }
+    .validation-card.status-card.none { color: var(--ink); border-color: var(--line); background: var(--surface); }
+    .validation-card.status-card.none span { color: var(--muted); }
+    .pdf-payment-field, .document-payment-field { display: none; }
+    .pdf-payment-field.visible, .document-payment-field.visible { display: block; }
+
+    .toast { position: fixed; right: 24px; bottom: 24px; z-index: 100; padding: 13px 16px; border-radius: 12px; color: white; background: var(--ink); box-shadow: var(--shadow); font-size: 12px; transform: translateY(18px); opacity: 0; pointer-events: none; transition: .25s ease; }
+    .toast.show { transform: none; opacity: 1; }
+
+    .success-modal { position: fixed; inset: 0; z-index: 200; display: none; place-items: center; padding: 24px; background: rgba(19, 21, 28, .94); }
+    .success-modal.visible { display: grid; }
+    .success-dialog { width: min(480px, 100%); padding: 42px 34px 32px; border-radius: 22px; background: white; text-align: center; box-shadow: 0 28px 90px rgba(0,0,0,.28); }
+    .success-icon { width: 68px; height: 68px; margin: 0 auto 20px; border-radius: 50%; display: grid; place-items: center; color: white; background: #3f7f5c; font-size: 34px; font-weight: 900; }
+    .success-dialog h2 { margin: 0; font-size: 24px; letter-spacing: -.035em; }
+    .success-dialog p { margin: 10px 0 24px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .success-dialog .primary-button { min-width: 150px; }
+
+    body.auth-locked { overflow: hidden; }
+    .login-screen { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; padding: 24px; color: var(--ink); background: var(--ink); }
+    .login-screen.hidden { display: none; }
+    .login-screen::before { content: ""; position: absolute; width: 430px; height: 430px; right: -190px; top: -220px; border: 72px solid rgba(255,255,255,.045); border-radius: 50%; }
+    .login-card { position: relative; width: min(410px, 100%); padding: 34px; border-radius: 24px; background: white; box-shadow: 0 32px 100px rgba(0,0,0,.3); }
+    .login-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .login-brand-mark { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: #f3f4f6; }
+    .login-brand-mark img { width: 32px; height: 32px; object-fit: contain; }
+    .login-brand strong { display: block; font-size: 16px; }
+    .login-brand span { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .login-card h1 { margin: 0; font-size: 27px; letter-spacing: -.045em; }
+    .login-card > p { margin: 8px 0 22px; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .login-form { display: grid; gap: 13px; }
+    .login-form .primary-button { width: 100%; min-height: 44px; margin-top: 3px; }
+    .login-error { display: none; padding: 10px 12px; border-radius: 9px; color: #8b2c25; background: #fff0ef; font-size: 10px; line-height: 1.4; }
+    .login-error.visible { display: block; }
+    .login-foot { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; line-height: 1.5; text-align: center; }
+    .app-loader { position: fixed; inset: 0; z-index: 450; display: none; place-items: center; color: white; background: var(--ink); }
+    .app-loader.visible { display: grid; }
+    .app-loader-content { display: grid; justify-items: center; gap: 14px; }
+    .app-loader-logo { width: 52px; height: 52px; padding: 10px; border-radius: 15px; display: grid; place-items: center; background: white; animation: loaderPulse .75s ease-in-out infinite alternate; }
+    .app-loader-logo img { display: block; width: 32px; height: 32px; object-fit: contain; }
+    .app-loader span { color: rgba(255,255,255,.62); font-size: 10px; letter-spacing: .08em; }
+    @keyframes loaderPulse { from { transform: scale(.94); opacity: .78; } to { transform: scale(1); opacity: 1; } }
+    .auth-settings-note { padding: 12px 14px; margin-bottom: 15px; border-radius: 11px; color: #4f5967; background: #f3f5f7; font-size: 10px; line-height: 1.5; }
+    .settings-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+    .settings-toggle { min-width: 190px; justify-content: center; }
+    .settings-toggle.active { color: white; background: var(--ink); box-shadow: none; }
+    .settings-panel { display: none; max-width: 760px; }
+    .settings-panel.open { display: block; }
+    .master-only.hidden { display: none !important; }
+    .user-list { display: grid; gap: 8px; margin-top: 18px; }
+    .user-list-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 11px; background: #fafbfc; }
+    .user-list-row strong { display: block; font-size: 11px; }
+    .user-list-row span { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; }
+    .user-role { flex: 0 0 auto; padding: 5px 8px; border-radius: 999px; color: #4f5967; background: #e9edf1; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+
+    @media (max-width: 1180px) {
+      .workspace-grid { grid-template-columns: 1fr; }
+      .preview-panel { position: static; }
+      .editor-scroll, .preview-stage { max-height: none; }
+      .doc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .archive-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .preview-stage .print-document { zoom: .95; }
+    }
+    @media (max-width: 860px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar { position: sticky; top: 0; z-index: 60; width: 100%; height: auto; padding: 10px 12px; gap: 9px; overflow: visible; }
+      .sidebar > div:nth-child(2) { width: 100%; }
+      .brand { width: 100%; min-width: 0; padding: 0 4px 9px; border: 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+      .brand-mark { width: 34px; height: 34px; border-radius: 10px; }
+      .brand strong { font-size: 13px; }
+      .brand span { font-size: 9px; }
+      .nav-label { display: none; }
+      .nav { width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
+      .nav-button { width: 100%; min-width: 0; min-height: 54px; padding: 7px 3px; flex-direction: column; justify-content: center; gap: 3px; text-align: center; white-space: normal; font-size: 9px; line-height: 1.15; }
+      .nav-icon { width: auto; font-size: 16px; line-height: 1; }
+      .topbar { padding: 18px 20px; }
+      .content { padding: 20px; }
+      .doc-grid { grid-template-columns: 1fr; }
+      .doc-card { min-height: 180px; }
+    }
+    @media (max-width: 620px) {
+      .topbar { min-height: 72px; align-items: flex-start; }
+      .topbar h1 { font-size: 17px; }
+      .topbar p { font-size: 10px; line-height: 1.4; }
+      .status-pill { padding: 7px 9px; font-size: 9px; }
+      .user-dropdown { width: 150px; }
+      .content { padding: 14px; }
+      .hero { padding: 26px; }
+      .workspace-header { align-items: flex-start; flex-direction: column; }
+      .workspace-actions { width: 100%; }
+      .workspace-actions button { flex: 1; }
+      .workspace-grid { grid-template-columns: minmax(0, 1fr); }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .item-grid { grid-template-columns: 1fr 1fr; }
+      .item-grid .title-field, .item-grid .description-field { grid-column: 1 / -1; }
+      .preview-stage { padding: 12px; overflow-x: auto; justify-content: start; }
+      .preview-stage .print-document { justify-content: start; zoom: .5; }
+      .import-layout { grid-template-columns: 1fr; }
+      .validation-grid { grid-template-columns: 1fr; }
+      .archive-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .archive-filters { grid-template-columns: 1fr 1fr; }
+      .documents-toolbar { align-items: flex-start; flex-direction: column; }
+      .archive-preview-document { zoom: .5; justify-content: start; }
+    }
+    @media (max-width: 390px) {
+      .nav-button { min-height: 50px; font-size: 8px; }
+      .nav-icon { font-size: 15px; }
+      .workspace-actions { flex-direction: column; }
+    }
+
+    @page { size: Letter; margin: 0; }
+    @media print {
+      html, body {
+        width: 8.5in !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        background: white !important;
+      }
+      .sidebar, .topbar, .workspace-header, .editor, .preview-toolbar,
+      #dashboardView, #documentsView, #settingsView, #importView, .toast, .success-modal, .archive-preview-modal { display: none !important; }
+      .app-shell, .main, .content, #workspaceView, .workspace-grid,
+      .preview-panel, .preview-stage {
+        position: static !important;
+        display: block !important;
+        width: 8.5in !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        background: white !important;
+        animation: none !important;
+      }
+      #printDocument, #printDocument * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      #printDocument {
+        position: static !important;
+        display: block !important;
+        width: 8.5in !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        gap: 0 !important;
+        zoom: 1 !important;
+      }
+      .print-page { width: 8.5in; min-height: 11in; margin: 0; box-shadow: none; break-after: page; page-break-after: always; }
+      .print-page:last-child { break-after: auto; page-break-after: auto; }
+      .script-block { break-inside: avoid; page-break-inside: avoid; }
+      .doc-footer { position: absolute; }
+    }
+  </style>
+</head>
+<body class="auth-locked">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <div class="brand">
+        <div class="brand-mark"><img src="assets/house-media-isotipo.svg" alt="Isotipo House Media"></div>
+        <div><strong>House Media</strong><span>FactPro</span></div>
+      </div>
+      <div>
+        <div class="nav-label">Menú</div>
+        <nav class="nav">
+          <button class="nav-button active" data-route="dashboard"><span class="nav-icon">⌂</span>Inicio</button>
+          <button class="nav-button" data-create="document"><span class="nav-icon">▤</span>Crear documento</button>
+          <button class="nav-button" data-route="documents"><span class="nav-icon">▥</span>Documentos</button>
+          <button class="nav-button" data-route="import"><span class="nav-icon">⇧</span>Importar PDF</button>
+          <button class="nav-button" data-route="settings"><span class="nav-icon">⚙</span>Ajustes</button>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><h1 id="pageTitle">Generador de documentos</h1><p id="pageSubtitle">Crea, revisa y exporta en formato PDF.</p></div>
+        <div class="user-menu" id="userMenu">
+          <button class="status-pill" id="userMenuButton" type="button" aria-haspopup="menu" aria-expanded="false"><span class="status-dot"></span><span id="loggedInUsername">Sin sesión</span><span class="user-menu-chevron" aria-hidden="true">⌄</span></button>
+          <div class="user-dropdown" id="userDropdown" role="menu"><button id="topLogoutButton" type="button" role="menuitem"><span aria-hidden="true">↪</span>Cerrar sesión</button></div>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="view active" id="dashboardView">
+          <div class="hero">
+            <p class="eyebrow">Generador de documentos</p>
+            <h2>Bienvenido a FactPro</h2>
+            <p>Selecciona un formato, completa el formulario y revisa la vista previa antes de guardarlo como PDF. Tus documentos permanecen en este navegador.</p>
+          </div>
+          <div class="section-head"><div><h3>¿Qué deseas hacer?</h3><p>Usa un solo generador para facturas, proformas y hojas de guion.</p></div></div>
+          <div class="doc-grid">
+            <article class="doc-card" data-create="document" tabindex="0" role="button">
+              <div class="card-icon">▤</div><h4>Crear documento</h4><p>Selecciona entre factura o proforma y agrega hojas de guion cuando las necesites.</p><div class="card-action">Abrir generador →</div>
+            </article>
+            <article class="doc-card" data-route="import" tabindex="0" role="button">
+              <div class="card-icon">⇧</div><h4>Importar PDF</h4><p>Valida un documento, elimina páginas de guion o convierte una proforma en factura.</p><div class="card-action">Procesar PDF →</div>
+            </article>
+            <article class="doc-card" data-route="documents" tabindex="0" role="button">
+              <div class="card-icon">▥</div><h4>Documentos</h4><p>Busca, filtra, consulta o edita las facturas y proformas almacenadas en este equipo.</p><div class="card-action">Abrir archivo →</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="workspaceView">
+          <div class="workspace-header">
+            <div class="workspace-title"><button class="back-button" id="backHome" aria-label="Volver al inicio">←</button><div><h2 id="workspaceTitle">Nuevo documento</h2><p>Los cambios aparecen de inmediato en la vista previa.</p></div></div>
+            <div class="workspace-actions"><button class="secondary-button" id="clearForm">Limpiar</button><button class="secondary-button" id="saveDocumentButton">Guardar</button><button class="primary-button" id="printButton">Generar PDF</button></div>
+          </div>
+
+          <div class="workspace-grid">
+            <section class="editor">
+              <div class="panel-head"><h3>Contenido del documento</h3><span>Edición en tiempo real</span></div>
+              <div class="editor-scroll">
+                <div class="form-section">
+                  <div class="form-section-head"><h4>Información general</h4><small>Datos del cliente</small></div>
+                  <div class="form-grid">
+                    <div class="field full"><label for="documentType">Seleccionar documento</label><select id="documentType"><option value="quote">Proforma</option><option value="invoice">Factura</option></select></div>
+                    <div class="field"><label for="docNumber">Número</label><input id="docNumber" autocomplete="off"></div>
+                    <div class="field"><label for="issueDate">Fecha de emisión</label><input id="issueDate" type="date"></div>
+                    <div class="field full"><label for="documentStatus">Estado del documento</label><select id="documentStatus"><option value="none">Sin estado</option><option value="active">Activo</option><option value="pending">Pendiente</option><option value="overdue">Vencido</option><option value="paid">Pagado</option></select></div>
+                    <div class="field full document-payment-field" id="documentPaymentMethodField"><label for="documentPaymentMethod">Tipo de pago</label><select id="documentPaymentMethod"><option value="cash">Efectivo</option><option value="deposit">Depósito</option></select></div>
+                    <div class="field document-payment-field" id="documentPaymentBankField"><label for="documentPaymentBank">Banco</label><select id="documentPaymentBank"><option value="LAFISE">LAFISE</option><option value="BAC">BAC</option><option value="BANPRO">BANPRO</option><option value="FICOHSA">FICOHSA</option><option value="BDF">BDF</option><option value="AVANZ">AVANZ</option></select></div>
+                    <div class="field document-payment-field" id="documentPaymentReferenceField"><label for="documentPaymentReference">Número de referencia</label><input id="documentPaymentReference" autocomplete="off" placeholder="Ej. 00128476"></div>
+                    <div class="field full"><label for="clientName">Nombre del cliente</label><input id="clientName" autocomplete="off"></div>
+                    <div class="field full"><label for="concept">Concepto de</label><input id="concept" autocomplete="off"></div>
+                    <div class="field full"><label for="city">Ciudad / País</label><input id="city" autocomplete="off"></div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="toggle-row">
+                    <div class="toggle-copy"><strong>Incluir portada</strong></div>
+                    <label class="switch"><input id="includeCover" type="checkbox" checked><span></span></label>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="toggle-row">
+                    <div class="toggle-copy"><strong>Agregar hoja de guion</strong><span>Incluye textos o guiones antes de la factura o proforma.</span></div>
+                    <label class="switch"><input id="includeScript" type="checkbox"><span></span></label>
+                  </div>
+                  <div class="script-fields" id="scriptFields">
+                    <div class="form-grid">
+                      <div class="field full"><label for="scriptTitle">Título del documento / guion</label><input id="scriptTitle"></div>
+                      <div class="field full"><label for="scriptDuration">Duración o subtítulo</label><input id="scriptDuration"></div>
+                    </div>
+                    <div class="script-list" id="scriptList" style="margin-top:14px"></div>
+                    <button class="add-button" id="addScriptBlock">+ Agregar bloque de texto</button>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="toggle-row">
+                    <div class="toggle-copy"><strong>Agregar hoja de imágenes</strong><span>Organiza imágenes por categorías en una cuadrícula horizontal después del documento.</span></div>
+                    <label class="switch"><input id="includeGallery" type="checkbox"><span></span></label>
+                  </div>
+                  <div class="optional-fields" id="galleryFields">
+                    <div class="gallery-category-list" id="galleryCategoryList"></div>
+                    <button class="add-button" id="addImageCategory" type="button">+ Agregar categoría de imágenes</button>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="toggle-row">
+                    <div class="toggle-copy"><strong>Agregar comprobantes de pago</strong><span>Incluye una segunda hoja con el resumen, las imágenes y los datos de cada pago.</span></div>
+                    <label class="switch"><input id="includePaymentProofs" type="checkbox"><span></span></label>
+                  </div>
+                  <div class="optional-fields" id="paymentProofFields">
+                    <div class="payment-proof-list" id="paymentProofList"></div>
+                    <button class="add-button" id="addPaymentProof" type="button">+ Agregar comprobante de pago</button>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-head"><h4>Servicios o productos</h4><small>Agrega los necesarios</small></div>
+                  <div class="item-list" id="itemList"></div>
+                  <button class="add-button" id="addItem">+ Agregar línea</button>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-head"><h4>Totales y observaciones</h4><small>Cálculo automático</small></div>
+                  <div class="form-grid">
+                    <div class="field"><label for="currency">Moneda</label><select id="currency"><option value="U$">U$ · Dólares</option><option value="C$">C$ · Córdobas</option><option value="$">$ · Genérico</option></select></div>
+                    <div class="field"><label for="discount">Descuento</label><input id="discount" type="number" min="0" step="0.01" value="0"></div>
+                    <div class="field"><label for="advance">Adelanto</label><input id="advance" type="number" min="0" step="0.01" value="0"></div>
+                    <div class="field"><label for="tax">Impuesto (%)</label><input id="tax" type="number" min="0" step="0.01" value="0"></div>
+                    <div class="field full"><label for="notes">Nota al pie</label><textarea id="notes"></textarea></div>
+                  </div>
+                  <div style="display:grid;gap:12px;margin-top:14px">
+                    <div class="toggle-row"><div class="toggle-copy"><strong>Mostrar descuento</strong><span>Incluye la línea aunque el valor sea cero.</span></div><label class="switch"><input id="showDiscount" type="checkbox"><span></span></label></div>
+                    <div class="toggle-row"><div class="toggle-copy"><strong>Mostrar impuesto</strong><span>Incluye la línea aunque el valor sea cero.</span></div><label class="switch"><input id="showTax" type="checkbox"><span></span></label></div>
+                    <div class="toggle-row"><div class="toggle-copy"><strong>Mostrar adelanto</strong><span>Incluye la línea aunque el valor sea cero.</span></div><label class="switch"><input id="showAdvance" type="checkbox"><span></span></label></div>
+                  </div>
+                  <div class="editor-summary">
+                    <div class="editor-summary-row"><span>Subtotal</span><strong id="editorSubtotal">U$ 0</strong></div>
+                    <div class="editor-summary-row"><span>Impuesto</span><strong id="editorTax">U$ 0</strong></div>
+                    <div class="editor-summary-row"><span>Descuento + adelanto</span><strong id="editorDeductions">U$ 0</strong></div>
+                    <div class="editor-summary-row total"><span>Total pendiente</span><strong id="editorTotal">U$ 0</strong></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="preview-panel">
+              <div class="preview-toolbar"><div><strong>Vista previa</strong><br><span>Formato carta · 8.5 × 11 pulgadas</span></div><button class="icon-button" id="printButtonSmall" aria-label="Imprimir documento">↗</button></div>
+              <div class="preview-stage"><div class="print-document" id="printDocument"></div></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="documentsView">
+          <div class="documents-toolbar">
+            <div class="documents-toolbar-copy"><h3>Documentos guardados</h3><p>Facturas y proformas del usuario que inició sesión.</p></div>
+            <div class="documents-toolbar-actions">
+              <button class="secondary-button" id="exportArchiveButton" type="button">Exportar respaldo</button>
+              <button class="secondary-button" id="importArchiveButton" type="button">Importar respaldo</button>
+              <input id="archiveBackupInput" type="file" accept="application/json,.json" hidden>
+              <button class="primary-button" data-create="document" type="button">+ Nuevo documento</button>
+            </div>
+          </div>
+          <div class="archive-summary">
+            <div class="archive-summary-card"><span>Documentos</span><strong id="archiveTotalCount">0</strong></div>
+            <div class="archive-summary-card"><span>Facturas</span><strong id="archiveInvoiceCount">0</strong></div>
+            <div class="archive-summary-card"><span>Proformas</span><strong id="archiveQuoteCount">0</strong></div>
+            <div class="archive-summary-card"><span>Valor visible</span><strong id="archiveVisibleTotal">U$ 0</strong></div>
+          </div>
+          <section class="editor">
+            <div class="archive-filters">
+              <div class="archive-filter"><label for="archiveSearch">Buscar</label><input id="archiveSearch" type="search" placeholder="Número, cliente o concepto"></div>
+              <div class="archive-filter"><label for="archiveTypeFilter">Tipo</label><select id="archiveTypeFilter"><option value="all">Todos</option><option value="invoice">Facturas</option><option value="quote">Proformas</option></select></div>
+              <div class="archive-filter"><label for="archiveStatusFilter">Estado</label><select id="archiveStatusFilter"><option value="all">Todos</option><option value="none">Sin estado</option><option value="active">Activo</option><option value="pending">Pendiente</option><option value="overdue">Vencido</option><option value="paid">Pagado</option></select></div>
+              <div class="archive-filter"><label for="archiveDateFrom">Desde</label><input id="archiveDateFrom" type="date"></div>
+              <div class="archive-filter"><label for="archiveDateTo">Hasta</label><input id="archiveDateTo" type="date"></div>
+              <button class="secondary-button" id="clearArchiveFilters" type="button">Limpiar filtros</button>
+            </div>
+            <div class="archive-table-wrap">
+              <table class="archive-table">
+                <thead><tr><th>Documento</th><th>Cliente</th><th>Fecha</th><th>Estado</th><th>Total</th><th>Actualizado</th><th>Acciones</th></tr></thead>
+                <tbody id="archiveTableBody"></tbody>
+              </table>
+              <div class="archive-empty" id="archiveEmpty">Todavía no hay documentos guardados.</div>
+            </div>
+          </section>
+          <div class="storage-note"><strong>Archivo privado y local.</strong> Esta información permanece en este navegador. Usa “Exportar respaldo” periódicamente para conservar una copia si cambias de computadora o borras los datos del navegador.</div>
+        </section>
+
+        <section class="view" id="settingsView">
+          <div class="section-head" style="margin-top:0"><div><h3>Ajustes</h3><p>Administra los datos de empresa, tu contraseña y los usuarios de FactPro.</p></div></div>
+          <div class="settings-actions" role="tablist" aria-label="Opciones de ajustes">
+            <button class="secondary-button settings-toggle" id="toggleCompanySettings" data-settings-panel="companySettingsPanel" type="button" aria-expanded="false">Modificar datos de la empresa</button>
+            <button class="secondary-button settings-toggle" id="togglePasswordSettings" data-settings-panel="passwordSettingsPanel" type="button" aria-expanded="false">Cambiar contraseña</button>
+            <button class="secondary-button settings-toggle master-only hidden" id="toggleUserSettings" data-settings-panel="userSettingsPanel" type="button" aria-expanded="false">Registrar Usuario</button>
+          </div>
+          <div class="editor settings-panel" id="companySettingsPanel">
+            <div class="panel-head"><h3>Identidad y contacto</h3><span>Aplicado a todos los formatos</span></div>
+            <div style="padding:22px">
+              <div class="form-grid">
+                <div class="field full"><label for="businessName">Nombre comercial</label><input id="businessName" value="House Media"></div>
+                <div class="field"><label for="businessTaxId">RUC</label><input id="businessTaxId" value="3240912960000L"></div>
+                <div class="field"><label for="businessPhone">Teléfono</label><input id="businessPhone" value="+505 8855-0818"></div>
+                <div class="field full"><label for="businessEmail">Correo</label><input id="businessEmail" value="housemedia.recep@gmail.com"></div>
+                <div class="field"><label>Logotipo de portada</label><div class="file-field"><input id="logoInput" type="file" accept="image/svg+xml,image/png,image/jpeg,image/webp"><span><strong>Seleccionar logotipo</strong><br>SVG o PNG con fondo transparente</span></div></div>
+                <div class="field"><label>Isotipo del encabezado</label><div class="file-field"><input id="isotipoInput" type="file" accept="image/svg+xml,image/png,image/jpeg,image/webp"><span><strong>Seleccionar isotipo</strong><br>Se muestra junto a los datos de empresa</span></div></div>
+                <div class="field"><label>Firma</label><div class="file-field"><input id="signatureInput" type="file" accept="image/svg+xml,image/png,image/jpeg,image/webp"><span><strong>Seleccionar firma</strong><br>SVG o PNG · solo vive en esta sesión</span></div></div>
+                <div class="field"><label>Código QR</label><div class="file-field"><input id="qrInput" type="file" accept="image/svg+xml,image/png,image/jpeg,image/webp"><span><strong>Seleccionar código QR</strong><br>Se muestra pequeño en el lateral derecho</span></div></div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:18px"><button class="primary-button" id="settingsDone">Listo</button><button class="secondary-button" id="restoreBrand">Restaurar datos</button></div>
+            </div>
+          </div>
+          <div class="editor settings-panel" id="passwordSettingsPanel">
+            <div class="panel-head"><h3>Acceso a FactPro</h3><span>Seguridad local</span></div>
+            <div style="padding:22px">
+              <div class="auth-settings-note">Usuario actual: <strong id="currentLoginUsername">HM.ADMIN</strong>. La contraseña se guarda localmente como una huella cifrada y nunca se incluye en los PDF.</div>
+              <div class="form-grid">
+                <div class="field full"><label for="currentPassword">Contraseña actual</label><input id="currentPassword" type="password" autocomplete="current-password"></div>
+                <div class="field"><label for="newPassword">Nueva contraseña</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8"></div>
+                <div class="field"><label for="confirmNewPassword">Confirmar nueva contraseña</label><input id="confirmNewPassword" type="password" autocomplete="new-password" minlength="8"></div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:18px"><button class="primary-button" id="changePasswordButton" type="button">Cambiar contraseña</button><button class="secondary-button" id="logoutButton" type="button">Cerrar sesión</button></div>
+            </div>
+          </div>
+          <div class="editor settings-panel master-only hidden" id="userSettingsPanel">
+            <div class="panel-head"><h3>Registrar usuario</h3><span>Solo HM.ADMIN</span></div>
+            <div style="padding:22px">
+              <div class="auth-settings-note">Cada usuario tendrá acceso únicamente a sus propias facturas y proformas guardadas en este navegador.</div>
+              <div class="form-grid">
+                <div class="field full"><label for="newUsername">Nombre de usuario</label><input id="newUsername" placeholder="Ejemplo: VENTAS.01" autocomplete="off"></div>
+                <div class="field"><label for="newUserPassword">Contraseña</label><input id="newUserPassword" type="password" autocomplete="new-password" minlength="8"></div>
+                <div class="field"><label for="confirmUserPassword">Confirmar contraseña</label><input id="confirmUserPassword" type="password" autocomplete="new-password" minlength="8"></div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:18px"><button class="primary-button" id="registerUserButton" type="button">Registrar Usuario</button></div>
+              <div class="user-list" id="registeredUsersList"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="importView">
+          <div class="section-head" style="margin-top:0"><div><h3>Importar y procesar PDF</h3><p>Todo se procesa en este dispositivo; el archivo no se envía ni se almacena.</p></div></div>
+          <div class="import-layout">
+            <section class="editor">
+              <div class="panel-head"><h3>Documento de origen</h3><span>PDF de House Media</span></div>
+              <div style="padding:20px">
+                <div class="drop-zone" id="pdfDropZone">
+                  <input id="pdfInput" type="file" accept="application/pdf,.pdf">
+                  <div class="drop-zone-copy"><div class="drop-zone-icon">PDF</div><strong>Selecciona o arrastra un PDF</strong><span>Se comprobarán sus páginas, medidas y capacidad de edición.</span></div>
+                </div>
+                <div class="pdf-status" id="pdfStatus"></div>
+                <div class="pdf-config" id="pdfConversionOptions" style="margin-top:20px">
+                  <div class="form-grid">
+                    <div class="field full"><label for="pdfOutputType">Resultado</label><select id="pdfOutputType"><option value="keep">Conservar tipo actual</option><option value="invoice">Convertir a Factura</option><option value="quote">Convertir a Proforma</option></select></div>
+                    <div class="field"><label for="pdfCommercialPage">Página de factura/proforma</label><select id="pdfCommercialPage"></select></div>
+                    <div class="field"><label for="pdfDocumentNumber">Número del documento</label><input id="pdfDocumentNumber"></div>
+                    <div class="field full"><label for="pdfDocumentStatus">Nuevo estado</label><select id="pdfDocumentStatus"><option value="keep">Conservar estado actual</option><option value="none">Sin estado</option><option value="active">Activo</option><option value="pending">Pendiente</option><option value="overdue">Vencido</option><option value="paid">Pagado</option></select></div>
+                    <div class="field full pdf-payment-field" id="pdfPaymentMethodField"><label for="pdfPaymentMethod">Tipo de pago</label><select id="pdfPaymentMethod"><option value="cash">Efectivo</option><option value="deposit">Depósito</option></select></div>
+                    <div class="field pdf-payment-field" id="pdfPaymentBankField"><label for="pdfPaymentBank">Banco</label><select id="pdfPaymentBank"><option value="LAFISE">LAFISE</option><option value="BAC">BAC</option><option value="BANPRO">BANPRO</option><option value="FICOHSA">FICOHSA</option><option value="BDF">BDF</option><option value="AVANZ">AVANZ</option></select></div>
+                    <div class="field pdf-payment-field" id="pdfPaymentReferenceField"><label for="pdfPaymentReference">Número de referencia</label><input id="pdfPaymentReference" autocomplete="off" placeholder="Ej. 00128476"></div>
+                  </div>
+                  <div style="display:grid;gap:9px;margin-top:14px">
+                    <button class="secondary-button" id="editImportedDocumentButton" type="button">Editar completo el documento</button>
+                    <button class="primary-button" id="processPdfButton" type="button">Descargar PDF procesado</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="editor pdf-config" id="pdfPagesPanel">
+              <div class="panel-head"><h3>Páginas y validación</h3><span id="pdfPageCountLabel">0 páginas</span></div>
+              <div style="padding:20px">
+                <div class="validation-grid" id="pdfValidationGrid"></div>
+                <div class="page-tools"><button class="secondary-button" id="selectAllPages">Conservar todas</button><button class="secondary-button" id="keepOnlyLastPage">Solo última página</button><button class="secondary-button" id="invertPages">Invertir selección</button></div>
+                <div class="page-list" id="pdfPageList"></div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="success-modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle" aria-hidden="true">
+    <div class="success-dialog">
+      <div class="success-icon" aria-hidden="true">✓</div>
+      <h2 id="successTitle">Documento generado con éxito</h2>
+      <p>El proceso de guardado del PDF ha finalizado.</p>
+      <button class="primary-button" id="acceptSuccess" type="button">Aceptar</button>
+    </div>
+  </div>
+  <div class="archive-preview-modal" id="archivePreviewModal" role="dialog" aria-modal="true" aria-labelledby="archivePreviewTitle" aria-hidden="true">
+    <div class="archive-preview-toolbar">
+      <div><h3 id="archivePreviewTitle">Vista del documento</h3><p id="archivePreviewMeta"></p></div>
+      <div class="archive-preview-toolbar-actions"><button class="secondary-button" id="editPreviewDocument" type="button">Editar</button><button class="secondary-button" id="closeArchivePreview" type="button">Cerrar</button></div>
+    </div>
+    <div class="archive-preview-stage"><div class="archive-preview-document" id="archivePreviewDocument"></div></div>
+  </div>
+  <div class="login-screen" id="loginScreen" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="login-card">
+      <div class="login-brand"><div class="login-brand-mark"><img src="assets/house-media-isotipo.svg" alt="Isotipo House Media"></div><div><strong>FactPro</strong><span>House Media</span></div></div>
+      <h1 id="loginTitle">Bienvenido</h1>
+      <p>Ingresa tus credenciales para acceder al generador y al archivo local de documentos.</p>
+      <form class="login-form" id="loginForm">
+        <div class="field"><label for="loginUsername">Usuario</label><input id="loginUsername" placeholder="Ingresa su usuario" autocomplete="username" required autofocus></div>
+        <div class="field"><label for="loginPassword">Contraseña</label><input id="loginPassword" type="password" placeholder="Ingresa la contraseña" autocomplete="current-password" required></div>
+        <div class="login-error" id="loginError" role="alert">Usuario o contraseña incorrectos.</div>
+        <button class="primary-button" id="loginButton" type="submit">Iniciar sesión</button>
+      </form>
+      <div class="login-foot">Acceso local. Tus credenciales y documentos permanecen únicamente en este navegador.</div>
+    </div>
+  </div>
+  <div class="app-loader" id="appLoader" aria-hidden="true" aria-label="Cargando FactPro">
+    <div class="app-loader-content"><div class="app-loader-logo"><img src="assets/house-media-isotipo.svg" alt=""></div><span>Cargando FactPro</span></div>
+  </div>
+
+  <script>
+    try {
+      if (sessionStorage.getItem("FactProActiveUser")) {
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("appLoader").classList.add("visible");
+        document.getElementById("appLoader").setAttribute("aria-hidden", "false");
+      }
+    } catch (error) {}
+  </script>
+
+  <script src="vendor/pdf-lib.min.js"></script>
+  <script src="vendor/pdfjs.min.js"></script>
+  <script src="vendor/pdfjs-worker-source.js"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const defaultBrand = {
+        name: "House Media",
+        taxId: "3240912960000L",
+        phone: "+505 8855-0818",
+        email: "housemedia.recep@gmail.com",
+        logo: "assets/house-media-logo.svg",
+        isotipo: "assets/house-media-isotipo.svg",
+        signature: "assets/firma-house-media.svg",
+        qr: "assets/qr-house-media.svg"
+      };
+
+      const state = {
+        brand: { ...defaultBrand },
+        items: [],
+        scripts: [],
+        imageCategories: [],
+        paymentProofs: [],
+        editingRecordId: null,
+        previewRecordId: null,
+        archiveRecords: [],
+        authenticated: false,
+        authSettings: null,
+        currentUser: null,
+        registeredUsers: [],
+        pdf: { file: null, bytes: null, document: null, pages: [], detectedType: "document", detectedStatus: "none", extractedData: null }
+      };
+
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+      const inputs = ["documentType","docNumber","issueDate","documentStatus","documentPaymentMethod","documentPaymentBank","documentPaymentReference","clientName","concept","city","includeCover","includeScript","includeGallery","includePaymentProofs","scriptTitle","scriptDuration","currency","discount","advance","tax","showDiscount","showTax","showAdvance","notes","businessName","businessTaxId","businessPhone","businessEmail"];
+
+      function todayISO() {
+        const now = new Date();
+        return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+      }
+
+      function escapeHTML(value = "") {
+        return String(value).replace(/[&<>'"]/g, char => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;" }[char]));
+      }
+
+      const documentStatuses = {
+        paid: { label: "Pagado", icon: "✓", className: "paid", color: [0.247, 0.498, 0.361] },
+        active: { label: "Activo", icon: "●", className: "active", color: [0.169, 0.443, 0.353] },
+        pending: { label: "Pendiente", icon: "●", className: "pending", color: [0.149, 0.212, 0.314] },
+        overdue: { label: "Vencido", icon: "!", className: "overdue", color: [0.718, 0.278, 0.278] }
+      };
+
+      function getStatus(value) {
+        return documentStatuses[value] || null;
+      }
+
+      function statusBadgeHTML(value) {
+        const status = getStatus(value);
+        if (!status) return "";
+        return `<span class="status-separator">-</span><span class="status-badge ${status.className}"><span aria-hidden="true">${status.icon}</span>${status.label}</span>`;
+      }
+
+      function updateDocumentPaymentFields() {
+        const isPaid = $("#documentStatus").value === "paid";
+        const isDeposit = isPaid && $("#documentPaymentMethod").value === "deposit";
+        $("#documentPaymentMethodField").classList.toggle("visible", isPaid);
+        $("#documentPaymentBankField").classList.toggle("visible", isDeposit);
+        $("#documentPaymentReferenceField").classList.toggle("visible", isDeposit);
+      }
+
+      function selectedDocumentPayment() {
+        if ($("#documentStatus").value !== "paid") return { method: "none", bank: "", reference: "" };
+        const method = $("#documentPaymentMethod").value;
+        return { method, bank: method === "deposit" ? $("#documentPaymentBank").value : "", reference: method === "deposit" ? $("#documentPaymentReference").value.trim() : "" };
+      }
+
+      function documentPaymentDetailHTML() {
+        if ($("#documentStatus").value !== "paid") return "";
+        const text = paymentPdfText(selectedDocumentPayment()).replace("Deposito", "Depósito");
+        return `<span class="document-payment-detail">${escapeHTML(text)}</span>`;
+      }
+
+      function formatDate(value) {
+        if (!value) return "Sin fecha";
+        const [y,m,d] = value.split("-").map(Number);
+        return new Intl.DateTimeFormat("es-NI", { weekday:"long", day:"numeric", month:"long", year:"numeric" }).format(new Date(y, m - 1, d));
+      }
+
+      function money(value) {
+        const symbol = $("#currency").value || "U$";
+        const amount = Number(value) || 0;
+        return `${symbol} ${new Intl.NumberFormat("es-NI", { minimumFractionDigits: amount % 1 ? 2 : 0, maximumFractionDigits: 2 }).format(amount)}`;
+      }
+
+      function totals() {
+        const subtotal = state.items.reduce((sum, item) => sum + (Number(item.qty) || 0) * (Number(item.price) || 0), 0);
+        const taxRate = Number($("#tax").value) || 0;
+        const taxAmount = subtotal * taxRate / 100;
+        const discount = Number($("#discount").value) || 0;
+        const advance = Number($("#advance").value) || 0;
+        return { subtotal, taxAmount, discount, advance, total: Math.max(0, subtotal + taxAmount - discount - advance) };
+      }
+
+      const archiveDatabaseName = "FactProArchivoLocal";
+      const archiveStoreName = "documents";
+      const settingsStoreName = "settings";
+      const usersStoreName = "users";
+      const defaultLoginUsername = "HM.ADMIN";
+      const defaultLoginPassword = "HMfactpro09";
+      const sessionStorageKey = "FactProActiveUser";
+      let archiveDatabasePromise = null;
+
+      function cloneArchiveData(value) {
+        return JSON.parse(JSON.stringify(value));
+      }
+
+      function openArchiveDatabase() {
+        if (archiveDatabasePromise) return archiveDatabasePromise;
+        archiveDatabasePromise = new Promise((resolve, reject) => {
+          if (!window.indexedDB) { reject(new Error("El navegador no admite almacenamiento local avanzado.")); return; }
+          const request = indexedDB.open(archiveDatabaseName, 3);
+          request.onupgradeneeded = event => {
+            const database = event.target.result;
+            let documentStore;
+            if (!database.objectStoreNames.contains(archiveStoreName)) {
+              documentStore = database.createObjectStore(archiveStoreName, { keyPath: "id" });
+              documentStore.createIndex("issueDate", "issueDate", { unique: false });
+              documentStore.createIndex("documentType", "documentType", { unique: false });
+              documentStore.createIndex("status", "status", { unique: false });
+              documentStore.createIndex("updatedAt", "updatedAt", { unique: false });
+            } else documentStore = event.target.transaction.objectStore(archiveStoreName);
+            if (!documentStore.indexNames.contains("ownerUsername")) documentStore.createIndex("ownerUsername", "ownerUsername", { unique: false });
+            if (!database.objectStoreNames.contains(settingsStoreName)) database.createObjectStore(settingsStoreName, { keyPath: "key" });
+            if (!database.objectStoreNames.contains(usersStoreName)) {
+              const userStore = database.createObjectStore(usersStoreName, { keyPath: "username" });
+              userStore.createIndex("role", "role", { unique: false });
+              userStore.createIndex("createdAt", "createdAt", { unique: false });
+            }
+          };
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error || new Error("No se pudo abrir el archivo local."));
+        });
+        return archiveDatabasePromise;
+      }
+
+      async function localStoreRequest(storeName, mode, operation) {
+        const database = await openArchiveDatabase();
+        return new Promise((resolve, reject) => {
+          const transaction = database.transaction(storeName, mode);
+          const store = transaction.objectStore(storeName);
+          const request = operation(store);
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error || new Error("No se pudo completar la operación local."));
+          transaction.onerror = () => reject(transaction.error || new Error("No se pudo completar la operación local."));
+        });
+      }
+
+      const archiveStoreRequest = (mode, operation) => localStoreRequest(archiveStoreName, mode, operation);
+      const settingsStoreRequest = (mode, operation) => localStoreRequest(settingsStoreName, mode, operation);
+      const usersStoreRequest = (mode, operation) => localStoreRequest(usersStoreName, mode, operation);
+
+      const getArchivedDocuments = () => archiveStoreRequest("readonly", store => store.getAll());
+      const getArchivedDocument = id => archiveStoreRequest("readonly", store => store.get(id));
+      const putArchivedDocument = record => archiveStoreRequest("readwrite", store => store.put(record));
+      const removeArchivedDocument = id => archiveStoreRequest("readwrite", store => store.delete(id));
+      const getUser = username => usersStoreRequest("readonly", store => store.get(username));
+      const getUsers = () => usersStoreRequest("readonly", store => store.getAll());
+      const putUser = user => usersStoreRequest("readwrite", store => store.put(user));
+
+      function authSalt() {
+        if (window.crypto?.getRandomValues) {
+          const bytes = new Uint8Array(16);
+          crypto.getRandomValues(bytes);
+          return [...bytes].map(byte => byte.toString(16).padStart(2, "0")).join("");
+        }
+        return `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`;
+      }
+
+      async function passwordHash(password, salt) {
+        const value = `${salt}:${password}`;
+        if (window.crypto?.subtle && window.TextEncoder) {
+          const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+          return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("");
+        }
+        let hash = 2166136261;
+        for (let index = 0; index < value.length; index += 1) {
+          hash ^= value.charCodeAt(index);
+          hash = Math.imul(hash, 16777619);
+        }
+        return `local-${(hash >>> 0).toString(16).padStart(8, "0")}`;
+      }
+
+      async function getAuthSettings() {
+        return settingsStoreRequest("readonly", store => store.get("auth"));
+      }
+
+      async function putAuthSettings(settings) {
+        return settingsStoreRequest("readwrite", store => store.put(settings));
+      }
+
+      function normalizeUsername(value) {
+        return String(value || "").trim().toUpperCase();
+      }
+
+      function storedSessionUsername() {
+        try { return normalizeUsername(sessionStorage.getItem(sessionStorageKey)); }
+        catch (error) { return ""; }
+      }
+
+      function rememberSession(username) {
+        try { sessionStorage.setItem(sessionStorageKey, username); }
+        catch (error) { console.warn("El navegador no permitió conservar la sesión en esta pestaña."); }
+      }
+
+      function forgetSession() {
+        try { sessionStorage.removeItem(sessionStorageKey); }
+        catch (error) { console.warn("El navegador no permitió limpiar la sesión de la pestaña."); }
+      }
+
+      async function ensureAuthSettings() {
+        let settings = await getUser(defaultLoginUsername);
+        if (!settings) {
+          const legacy = await getAuthSettings();
+          const salt = authSalt();
+          const now = new Date().toISOString();
+          settings = {
+            username:defaultLoginUsername,
+            role:"master",
+            salt:legacy?.salt || salt,
+            passwordHash:legacy?.passwordHash || await passwordHash(defaultLoginPassword, salt),
+            createdAt:legacy?.updatedAt || now,
+            updatedAt:now
+          };
+          await putUser(settings);
+        }
+        return settings;
+      }
+
+      async function migrateLegacyDocumentOwnership() {
+        const records = await getArchivedDocuments();
+        for (const record of records) {
+          if (record.ownerUsername) continue;
+          await putArchivedDocument({ ...record, ownerUsername:defaultLoginUsername });
+        }
+      }
+
+      function isMasterUser() {
+        return state.currentUser?.role === "master" && state.currentUser.username === defaultLoginUsername;
+      }
+
+      function updateAccessInterface() {
+        const username = state.currentUser?.username || "Sin sesión";
+        $("#loggedInUsername").textContent = username;
+        $("#currentLoginUsername").textContent = username;
+        $$(".master-only").forEach(element => element.classList.toggle("hidden", !isMasterUser()));
+        if (!isMasterUser() && $("#userSettingsPanel").classList.contains("open")) closeSettingsPanels();
+      }
+
+      async function renderRegisteredUsers() {
+        if (!isMasterUser()) return;
+        state.registeredUsers = (await getUsers()).sort((a, b) => a.username.localeCompare(b.username));
+        $("#registeredUsersList").innerHTML = state.registeredUsers.map(user => `
+          <div class="user-list-row">
+            <div><strong>${escapeHTML(user.username)}</strong><span>${user.role === "master" ? "Cuenta maestra" : "Usuario registrado"}</span></div>
+            <div class="user-role">${user.role === "master" ? "Master" : "Usuario"}</div>
+          </div>`).join("");
+      }
+
+      function wait(milliseconds) {
+        return new Promise(resolve => setTimeout(resolve, milliseconds));
+      }
+
+      async function activateUserSession(settings) {
+        const loader = $("#appLoader");
+        const startedAt = Date.now();
+        loader.classList.add("visible");
+        loader.setAttribute("aria-hidden", "false");
+        try {
+          state.authenticated = true;
+          state.currentUser = settings;
+          state.authSettings = settings;
+          state.editingRecordId = null;
+          rememberSession(settings.username);
+          updateAccessInterface();
+          await refreshArchive();
+          if (isMasterUser()) await renderRegisteredUsers();
+          $("#loginPassword").value = "";
+          $("#loginScreen").classList.add("hidden");
+          document.body.classList.remove("auth-locked");
+          const remaining = Math.max(0, 620 - (Date.now() - startedAt));
+          if (remaining) await wait(remaining);
+        } finally {
+          loader.classList.remove("visible");
+          loader.setAttribute("aria-hidden", "true");
+        }
+      }
+
+      async function restoreActiveSession() {
+        const username = storedSessionUsername();
+        if (!username) return false;
+        const settings = await getUser(username);
+        if (!settings) { forgetSession(); return false; }
+        await activateUserSession(settings);
+        return true;
+      }
+
+      async function handleLogin(event) {
+        event.preventDefault();
+        const button = $("#loginButton");
+        const errorBox = $("#loginError");
+        button.disabled = true;
+        button.textContent = "Comprobando…";
+        errorBox.classList.remove("visible");
+        try {
+          await ensureAuthSettings();
+          const username = normalizeUsername($("#loginUsername").value);
+          const password = $("#loginPassword").value;
+          const settings = await getUser(username);
+          const hash = settings ? await passwordHash(password, settings.salt) : "";
+          if (!settings || hash !== settings.passwordHash) {
+            errorBox.textContent = "Usuario o contraseña incorrectos.";
+            errorBox.classList.add("visible");
+            $("#loginPassword").select();
+            return;
+          }
+          await activateUserSession(settings);
+          toast("Sesión iniciada correctamente.");
+        } catch (error) {
+          console.error(error);
+          errorBox.textContent = "No se pudo abrir el acceso local de FactPro.";
+          errorBox.classList.add("visible");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Iniciar sesión";
+        }
+      }
+
+      function logout() {
+        forgetSession();
+        closeUserMenu();
+        state.authenticated = false;
+        state.currentUser = null;
+        state.authSettings = null;
+        state.archiveRecords = [];
+        state.editingRecordId = null;
+        state.previewRecordId = null;
+        resetDocumentForm();
+        resetImportedPdf();
+        updateAccessInterface();
+        renderArchive();
+        renderAll();
+        closeSettingsPanels();
+        closeArchivePreview();
+        closeSuccessModal();
+        showView("dashboard");
+        $("#loginError").classList.remove("visible");
+        $("#loginUsername").value = "";
+        $("#loginPassword").value = "";
+        $("#loginScreen").classList.remove("hidden");
+        document.body.classList.add("auth-locked");
+        setTimeout(() => $("#loginUsername").focus(), 30);
+      }
+
+      function closeUserMenu() {
+        $("#userDropdown").classList.remove("visible");
+        $("#userMenuButton").setAttribute("aria-expanded", "false");
+      }
+
+      function toggleUserMenu() {
+        if (!state.authenticated) return;
+        const shouldOpen = !$("#userDropdown").classList.contains("visible");
+        closeUserMenu();
+        if (!shouldOpen) return;
+        $("#userDropdown").classList.add("visible");
+        $("#userMenuButton").setAttribute("aria-expanded", "true");
+      }
+
+      async function changePassword() {
+        const currentPassword = $("#currentPassword").value;
+        const newPassword = $("#newPassword").value;
+        const confirmation = $("#confirmNewPassword").value;
+        if (!currentPassword) { toast("Escribe tu contraseña actual."); return; }
+        if (newPassword.length < 8) { toast("La nueva contraseña debe tener al menos 8 caracteres.", 4200); return; }
+        if (newPassword !== confirmation) { toast("La confirmación de la nueva contraseña no coincide.", 4200); return; }
+        try {
+          if (!state.currentUser) { toast("Inicia sesión nuevamente.", 4200); return; }
+          const settings = await getUser(state.currentUser.username);
+          const currentHash = await passwordHash(currentPassword, settings.salt);
+          if (currentHash !== settings.passwordHash) { toast("La contraseña actual es incorrecta.", 4200); return; }
+          const salt = authSalt();
+          const updated = { ...settings, salt, passwordHash:await passwordHash(newPassword, salt), updatedAt:new Date().toISOString() };
+          await putUser(updated);
+          state.authSettings = updated;
+          state.currentUser = updated;
+          $("#currentPassword").value = "";
+          $("#newPassword").value = "";
+          $("#confirmNewPassword").value = "";
+          toast("Contraseña actualizada correctamente.", 4200);
+        } catch (error) {
+          console.error(error);
+          toast("No se pudo cambiar la contraseña.", 4200);
+        }
+      }
+
+      async function registerUser() {
+        if (!isMasterUser()) { toast("Solo HM.ADMIN puede registrar usuarios.", 4200); return; }
+        const username = normalizeUsername($("#newUsername").value);
+        const password = $("#newUserPassword").value;
+        const confirmation = $("#confirmUserPassword").value;
+        if (!/^[A-Z0-9._-]{3,32}$/.test(username)) { toast("Usa de 3 a 32 caracteres: letras, números, punto, guion o guion bajo.", 5200); return; }
+        if (password.length < 8) { toast("La contraseña debe tener al menos 8 caracteres.", 4200); return; }
+        if (password !== confirmation) { toast("La confirmación de la contraseña no coincide.", 4200); return; }
+        if (await getUser(username)) { toast("Ese nombre de usuario ya está registrado.", 4200); return; }
+        try {
+          const salt = authSalt();
+          const now = new Date().toISOString();
+          await putUser({ username, role:"user", salt, passwordHash:await passwordHash(password, salt), createdAt:now, updatedAt:now });
+          $("#newUsername").value = "";
+          $("#newUserPassword").value = "";
+          $("#confirmUserPassword").value = "";
+          await renderRegisteredUsers();
+          toast(`Usuario ${username} registrado correctamente.`, 4200);
+        } catch (error) {
+          console.error(error);
+          toast("No se pudo registrar el usuario.", 4200);
+        }
+      }
+
+      function resetImportedPdf() {
+        state.pdf = { file:null, bytes:null, document:null, pages:[], detectedType:"document", detectedStatus:"none", extractedData:null };
+        $("#pdfInput").value = "";
+        $("#pdfStatus").textContent = "";
+        $("#pdfStatus").className = "pdf-status";
+        $("#pdfConversionOptions").classList.remove("visible");
+        $("#pdfPageList").innerHTML = "";
+        $("#pdfPageCountLabel").textContent = "0 páginas";
+      }
+
+      function createArchiveId() {
+        if (window.crypto?.randomUUID) return crypto.randomUUID();
+        return `factpro-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      }
+
+      function captureDocumentSnapshot() {
+        const valueIds = ["documentType","docNumber","issueDate","documentStatus","documentPaymentMethod","documentPaymentBank","documentPaymentReference","clientName","concept","city","scriptTitle","scriptDuration","currency","discount","advance","tax","notes"];
+        const checkIds = ["includeCover","includeScript","includeGallery","includePaymentProofs","showDiscount","showTax","showAdvance"];
+        return {
+          values: Object.fromEntries(valueIds.map(id => [id, $("#" + id).value])),
+          checks: Object.fromEntries(checkIds.map(id => [id, $("#" + id).checked])),
+          brand: cloneArchiveData(state.brand),
+          items: cloneArchiveData(state.items),
+          scripts: cloneArchiveData(state.scripts),
+          imageCategories: cloneArchiveData(state.imageCategories),
+          paymentProofs: cloneArchiveData(state.paymentProofs)
+        };
+      }
+
+      function applyDocumentSnapshot(snapshot = {}) {
+        resetDocumentForm();
+        Object.entries(snapshot.values || {}).forEach(([id, value]) => { const input = $("#" + id); if (input) input.value = value; });
+        Object.entries(snapshot.checks || {}).forEach(([id, checked]) => { const input = $("#" + id); if (input) input.checked = Boolean(checked); });
+        state.brand = { ...defaultBrand, ...(snapshot.brand || {}) };
+        $("#businessName").value = state.brand.name;
+        $("#businessTaxId").value = state.brand.taxId;
+        $("#businessPhone").value = state.brand.phone;
+        $("#businessEmail").value = state.brand.email;
+        state.items = cloneArchiveData(snapshot.items || []);
+        state.scripts = cloneArchiveData(snapshot.scripts || []);
+        state.imageCategories = cloneArchiveData(snapshot.imageCategories || []);
+        state.paymentProofs = cloneArchiveData(snapshot.paymentProofs || []);
+        updateDocumentPaymentFields();
+      }
+
+      function archiveAmount(record) {
+        const amount = Number(record.total) || 0;
+        return `${record.currency || "U$"} ${new Intl.NumberFormat("es-NI", { minimumFractionDigits: amount % 1 ? 2 : 0, maximumFractionDigits: 2 }).format(amount)}`;
+      }
+
+      function archiveStatusHTML(statusKey) {
+        const status = getStatus(statusKey);
+        if (!status) return '<span class="archive-status none">Sin estado</span>';
+        return `<span class="archive-status ${status.className}"><span aria-hidden="true">${status.icon}</span>${status.label}</span>`;
+      }
+
+      function archiveDateLabel(value) {
+        if (!value) return "Sin fecha";
+        const [year, month, day] = value.split("-");
+        return `${day}/${month}/${year}`;
+      }
+
+      function archiveUpdatedLabel(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "Sin dato";
+        return new Intl.DateTimeFormat("es-NI", { day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" }).format(date);
+      }
+
+      function filteredArchiveRecords() {
+        const search = $("#archiveSearch").value.trim().toLowerCase();
+        const type = $("#archiveTypeFilter").value;
+        const status = $("#archiveStatusFilter").value;
+        const from = $("#archiveDateFrom").value;
+        const to = $("#archiveDateTo").value;
+        return state.archiveRecords.filter(record => {
+          const haystack = [record.number, record.clientName, record.concept, record.documentType === "invoice" ? "factura" : "proforma"].join(" ").toLowerCase();
+          return (!search || haystack.includes(search)) && (type === "all" || record.documentType === type) && (status === "all" || record.status === status) && (!from || record.issueDate >= from) && (!to || record.issueDate <= to);
+        });
+      }
+
+      function renderArchive() {
+        const records = filteredArchiveRecords();
+        const all = state.archiveRecords;
+        $("#archiveTotalCount").textContent = all.length;
+        $("#archiveInvoiceCount").textContent = all.filter(record => record.documentType === "invoice").length;
+        $("#archiveQuoteCount").textContent = all.filter(record => record.documentType === "quote").length;
+        const currencies = [...new Set(records.map(record => record.currency || "U$"))];
+        const visibleTotal = records.reduce((sum, record) => sum + (Number(record.total) || 0), 0);
+        $("#archiveVisibleTotal").textContent = currencies.length <= 1 ? `${currencies[0] || "U$"} ${new Intl.NumberFormat("es-NI", { maximumFractionDigits:2 }).format(visibleTotal)}` : "Varias monedas";
+        $("#archiveTableBody").innerHTML = records.map(record => {
+          const kind = record.documentType === "invoice" ? "Factura" : "Proforma";
+          return `<tr>
+            <td class="archive-document-name"><strong>${kind} #${escapeHTML(record.number || "Sin número")}</strong><span>${escapeHTML(record.concept || "Sin concepto")}</span></td>
+            <td>${escapeHTML(record.clientName || "Sin cliente")}</td>
+            <td>${escapeHTML(archiveDateLabel(record.issueDate))}</td>
+            <td>${archiveStatusHTML(record.status)}</td>
+            <td><strong>${escapeHTML(archiveAmount(record))}</strong></td>
+            <td>${escapeHTML(archiveUpdatedLabel(record.updatedAt))}</td>
+            <td><div class="archive-actions"><button class="archive-action" data-view-record="${record.id}" type="button">Ver</button><button class="archive-action" data-edit-record="${record.id}" type="button">Editar</button><button class="archive-action delete" data-delete-record="${record.id}" type="button">Borrar</button></div></td>
+          </tr>`;
+        }).join("");
+        $("#archiveEmpty").style.display = records.length ? "none" : "block";
+      }
+
+      async function refreshArchive() {
+        try {
+          const ownerUsername = state.currentUser?.username;
+          const records = ownerUsername ? (await getArchivedDocuments()).filter(record => record.ownerUsername === ownerUsername) : [];
+          state.archiveRecords = records.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+          renderArchive();
+        } catch (error) {
+          console.error(error);
+          if ($("#documentsView").classList.contains("active")) toast("No se pudo abrir el archivo local.", 4200);
+        }
+      }
+
+      async function saveCurrentDocument(showMessage = true) {
+        if (!state.currentUser) throw new Error("No hay una sesión activa.");
+        renderPreview();
+        const current = state.archiveRecords.find(record => record.id === state.editingRecordId);
+        const now = new Date().toISOString();
+        const t = totals();
+        const record = {
+          id: state.editingRecordId || createArchiveId(),
+          ownerUsername: state.currentUser.username,
+          documentType: $("#documentType").value,
+          number: $("#docNumber").value.trim(),
+          clientName: $("#clientName").value.trim(),
+          concept: $("#concept").value.trim(),
+          issueDate: $("#issueDate").value || todayISO(),
+          status: $("#documentStatus").value,
+          currency: $("#currency").value,
+          total: t.total,
+          createdAt: current?.createdAt || now,
+          updatedAt: now,
+          snapshot: captureDocumentSnapshot(),
+          previewHTML: $("#printDocument").innerHTML
+        };
+        await putArchivedDocument(record);
+        state.editingRecordId = record.id;
+        await refreshArchive();
+        renderPreview();
+        if (showMessage) toast(`${record.documentType === "invoice" ? "Factura" : "Proforma"} guardada localmente.`);
+        return record;
+      }
+
+      function openArchivePreview(id) {
+        const record = state.archiveRecords.find(item => item.id === id);
+        if (!record) return;
+        state.previewRecordId = id;
+        const kind = record.documentType === "invoice" ? "Factura" : "Proforma";
+        $("#archivePreviewTitle").textContent = `${kind} #${record.number || "Sin número"}`;
+        $("#archivePreviewMeta").textContent = `${record.clientName || "Sin cliente"} · ${archiveDateLabel(record.issueDate)} · ${archiveAmount(record)}`;
+        $("#archivePreviewDocument").innerHTML = record.previewHTML || '<div class="archive-empty">Este documento no tiene una vista guardada.</div>';
+        $("#archivePreviewModal").classList.add("visible");
+        $("#archivePreviewModal").setAttribute("aria-hidden", "false");
+      }
+
+      function closeArchivePreview() {
+        $("#archivePreviewModal").classList.remove("visible");
+        $("#archivePreviewModal").setAttribute("aria-hidden", "true");
+      }
+
+      function editArchivedDocument(id) {
+        const record = state.archiveRecords.find(item => item.id === id);
+        if (!record) return;
+        applyDocumentSnapshot(record.snapshot);
+        state.editingRecordId = id;
+        closeArchivePreview();
+        renderAll();
+        showView("workspace");
+        toast("Documento abierto para edición.");
+      }
+
+      async function deleteArchivedDocument(id) {
+        const record = state.archiveRecords.find(item => item.id === id);
+        if (!record || !confirm(`¿Deseas borrar ${record.documentType === "invoice" ? "la factura" : "la proforma"} #${record.number || "sin número"}?`)) return;
+        await removeArchivedDocument(id);
+        if (state.editingRecordId === id) state.editingRecordId = null;
+        await refreshArchive();
+        toast("Documento eliminado del archivo local.");
+      }
+
+      async function exportArchiveBackup() {
+        await refreshArchive();
+        const payload = { app:"FactPro", version:2, ownerUsername:state.currentUser?.username, exportedAt:new Date().toISOString(), records:state.archiveRecords };
+        const blob = new Blob([JSON.stringify(payload)], { type:"application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `FactPro-Respaldo-${state.currentUser?.username || "Usuario"}-${todayISO()}.json`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        toast("Respaldo exportado.");
+      }
+
+      async function importArchiveBackup(file) {
+        if (!file) return;
+        try {
+          const payload = JSON.parse(await file.text());
+          if (payload.app !== "FactPro" || !Array.isArray(payload.records)) throw new Error("Formato no válido");
+          for (const record of payload.records) {
+            if (!record?.id || !record?.snapshot) continue;
+            const existing = await getArchivedDocument(record.id);
+            const id = existing && existing.ownerUsername !== state.currentUser?.username ? createArchiveId() : record.id;
+            await putArchivedDocument({ ...record, id, ownerUsername:state.currentUser.username });
+          }
+          await refreshArchive();
+          toast(`${payload.records.length} documento${payload.records.length === 1 ? " restaurado" : "s restaurados"}.`, 4200);
+        } catch (error) {
+          toast("El archivo seleccionado no es un respaldo válido de FactPro.", 4200);
+        } finally {
+          $("#archiveBackupInput").value = "";
+        }
+      }
+
+      async function initializeArchive() {
+        await openArchiveDatabase();
+        await ensureAuthSettings();
+        await migrateLegacyDocumentOwnership();
+        try { await navigator.storage?.persist?.(); } catch (error) { console.warn("El navegador no confirmó almacenamiento persistente."); }
+        updateAccessInterface();
+        return restoreActiveSession();
+      }
+
+      function toast(message, duration = 2400) {
+        const el = $("#toast");
+        el.textContent = message;
+        el.classList.add("show");
+        clearTimeout(toast.timer);
+        toast.timer = setTimeout(() => el.classList.remove("show"), duration);
+      }
+
+      function closeSettingsPanels() {
+        $$(".settings-panel").forEach(panel => panel.classList.remove("open"));
+        $$(".settings-toggle").forEach(button => {
+          button.classList.remove("active");
+          button.setAttribute("aria-expanded", "false");
+        });
+      }
+
+      function toggleSettingsPanel(panelId) {
+        const panel = $("#" + panelId);
+        const button = $(`[data-settings-panel="${panelId}"]`);
+        if (!panel || !button || button.classList.contains("hidden")) return;
+        const shouldOpen = !panel.classList.contains("open");
+        closeSettingsPanels();
+        if (!shouldOpen) return;
+        panel.classList.add("open");
+        button.classList.add("active");
+        button.setAttribute("aria-expanded", "true");
+        if (panelId === "userSettingsPanel") renderRegisteredUsers();
+      }
+
+      function showView(name) {
+        $$(".view").forEach(view => view.classList.remove("active"));
+        $$(".nav-button").forEach(button => button.classList.remove("active"));
+        if (name === "dashboard") {
+          $("#dashboardView").classList.add("active");
+          $('[data-route="dashboard"]').classList.add("active");
+          $("#pageTitle").textContent = "Generador de documentos";
+          $("#pageSubtitle").textContent = "Crea, revisa y exporta en formato PDF.";
+        } else if (name === "settings") {
+          $("#settingsView").classList.add("active");
+          $('[data-route="settings"]').classList.add("active");
+          $("#pageTitle").textContent = "Ajustes";
+          $("#pageSubtitle").textContent = "Personaliza los datos que aparecen en tus documentos.";
+          closeSettingsPanels();
+        } else if (name === "import") {
+          $("#importView").classList.add("active");
+          $('[data-route="import"]').classList.add("active");
+          $("#pageTitle").textContent = "Procesar PDF";
+          $("#pageSubtitle").textContent = "Valida, convierte o elimina páginas sin subir el archivo.";
+        } else if (name === "documents") {
+          $("#documentsView").classList.add("active");
+          $('[data-route="documents"]').classList.add("active");
+          $("#pageTitle").textContent = "Documentos guardados";
+          $("#pageSubtitle").textContent = "Consulta y administra tu archivo local.";
+          refreshArchive();
+        } else {
+          $("#workspaceView").classList.add("active");
+          $('[data-create="document"]').classList.add("active");
+          $("#pageTitle").textContent = "Editor de documentos";
+          $("#pageSubtitle").textContent = "Completa el formulario y revisa el resultado.";
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function resetDocumentForm() {
+        $("#documentType").value = "quote";
+        $("#docNumber").value = "";
+        $("#issueDate").value = todayISO();
+        $("#documentStatus").value = "none";
+        $("#documentPaymentMethod").value = "cash";
+        $("#documentPaymentBank").value = "LAFISE";
+        $("#documentPaymentReference").value = "";
+        $("#clientName").value = "";
+        $("#concept").value = "";
+        $("#city").value = "";
+        $("#includeCover").checked = true;
+        $("#includeScript").checked = false;
+        $("#includeGallery").checked = false;
+        $("#includePaymentProofs").checked = false;
+        $("#scriptTitle").value = "";
+        $("#scriptDuration").value = "";
+        $("#currency").value = "U$";
+        $("#discount").value = 0;
+        $("#advance").value = 0;
+        $("#tax").value = 0;
+        $("#showDiscount").checked = false;
+        $("#showTax").checked = false;
+        $("#showAdvance").checked = false;
+        $("#notes").value = "";
+        state.items = [];
+        state.scripts = [];
+        state.imageCategories = [];
+        state.paymentProofs = [];
+        state.editingRecordId = null;
+        updateDocumentPaymentFields();
+      }
+
+      function openDocument(reset = true) {
+        if (reset) resetDocumentForm();
+        renderAll();
+        showView("workspace");
+      }
+
+      function renderItems() {
+        const list = $("#itemList");
+        list.innerHTML = state.items.map((item, index) => `
+          <div class="item-card" data-item-index="${index}">
+            <div class="item-top"><span class="item-index">Línea ${index + 1}</span><button class="remove-mini" data-remove-item="${index}" type="button">Eliminar</button></div>
+            <div class="item-grid">
+              <div class="field title-field"><label>Nombre</label><input data-item-field="title" value="${escapeHTML(item.title)}"></div>
+              <div class="field"><label>Cant.</label><input data-item-field="qty" type="number" min="0" step="1" value="${escapeHTML(item.qty)}"></div>
+              <div class="field"><label>Precio</label><input data-item-field="price" type="number" min="0" step="0.01" value="${escapeHTML(item.price)}"></div>
+              <div class="field description-field"><label>Descripción o subpuntos</label><textarea data-item-field="description">${escapeHTML(item.description)}</textarea></div>
+            </div>
+          </div>`).join("");
+        if (!state.items.length) list.innerHTML = '<div class="empty-state">Aún no hay líneas en el documento.</div>';
+      }
+
+      function renderScripts() {
+        const list = $("#scriptList");
+        list.innerHTML = state.scripts.map((block, index) => `
+          <div class="script-card" data-script-index="${index}">
+            <div class="script-top"><span class="item-index">Bloque ${index + 1}</span><button class="remove-mini" data-remove-script="${index}" type="button">Eliminar</button></div>
+            <div class="form-grid">
+              <div class="field full"><label>Título o tiempo</label><input data-script-field="title" value="${escapeHTML(block.title)}"></div>
+              <div class="field full"><label>Texto</label><textarea data-script-field="content" style="min-height:120px">${escapeHTML(block.content)}</textarea></div>
+            </div>
+          </div>`).join("");
+        if (!state.scripts.length) list.innerHTML = '<div class="empty-state">Agrega un bloque para comenzar el guion.</div>';
+      }
+
+      function renderImageCategories() {
+        const list = $("#galleryCategoryList");
+        list.innerHTML = state.imageCategories.map((category, categoryIndex) => `
+          <div class="gallery-category-card" data-category-index="${categoryIndex}">
+            <div class="optional-card-top"><span class="item-index">Categoría ${categoryIndex + 1}</span><button class="remove-mini" data-remove-category="${categoryIndex}" type="button">Eliminar</button></div>
+            <div class="field"><label>Nombre de la categoría</label><input data-category-field="name" value="${escapeHTML(category.name)}" placeholder="Ej. Mala Vida"></div>
+            <div class="image-upload-box" style="margin-top:10px">
+              <input type="file" accept="image/*" multiple data-gallery-upload="${categoryIndex}">
+              <span><strong>Agregar imágenes</strong>Selecciona varias a la vez · se ajustan automáticamente</span>
+            </div>
+            <div class="editor-thumbnails">${category.images.map((image, imageIndex) => `
+              <div class="editor-thumbnail"><img src="${escapeHTML(image.src)}" alt="${escapeHTML(image.name || `Imagen ${imageIndex + 1}`)}"><button type="button" data-remove-gallery-image="${categoryIndex}:${imageIndex}" aria-label="Eliminar imagen">×</button></div>`).join("")}</div>
+          </div>`).join("");
+        if (!state.imageCategories.length) list.innerHTML = '<div class="empty-state">Activa la hoja y agrega una categoría para comenzar.</div>';
+      }
+
+      function renderPaymentProofs() {
+        const list = $("#paymentProofList");
+        list.innerHTML = state.paymentProofs.map((proof, index) => `
+          <div class="payment-proof-card" data-proof-index="${index}">
+            <div class="optional-card-top"><span class="item-index">Comprobante ${index + 1}</span><button class="remove-mini" data-remove-proof="${index}" type="button">Eliminar</button></div>
+            <div class="form-grid">
+              <div class="field full"><label>Título o concepto</label><input data-proof-field="title" value="${escapeHTML(proof.title)}" placeholder="Ej. Remesa"></div>
+              <div class="field"><label>Monto</label><input data-proof-field="amount" type="number" min="0" step="0.01" value="${escapeHTML(proof.amount)}"></div>
+              <div class="field"><label>Fecha</label><input data-proof-field="date" type="date" value="${escapeHTML(proof.date)}"></div>
+              <div class="field"><label>Tipo de pago</label><select data-proof-field="method"><option value="deposit" ${proof.method === "deposit" ? "selected" : ""}>Depósito</option><option value="cash" ${proof.method === "cash" ? "selected" : ""}>Efectivo</option></select></div>
+              ${proof.method === "deposit" ? `<div class="field"><label>Banco</label><select data-proof-field="bank">${["LAFISE","BAC","BANPRO","FICOHSA","BDF","AVANZ"].map(bank => `<option value="${bank}" ${proof.bank === bank ? "selected" : ""}>${bank}</option>`).join("")}</select></div>` : ""}
+              <div class="field full"><label>Depositante / persona que pagó</label><input data-proof-field="depositor" value="${escapeHTML(proof.depositor)}"></div>
+              ${proof.method === "deposit" ? `<div class="field full"><label>Número de referencia o confirmación</label><input data-proof-field="reference" value="${escapeHTML(proof.reference)}"></div>` : ""}
+            </div>
+            <div class="image-upload-box" style="margin-top:10px">
+              <input type="file" accept="image/*" data-proof-upload="${index}">
+              <span><strong>${proof.image ? "Cambiar imagen" : "Agregar imagen del comprobante"}</strong>PNG, JPG o WebP</span>
+            </div>
+            ${proof.image ? `<div class="proof-image-preview"><img src="${escapeHTML(proof.image)}" alt="Comprobante ${index + 1}"></div>` : ""}
+          </div>`).join("");
+        if (!state.paymentProofs.length) list.innerHTML = '<div class="empty-state">Activa la hoja y agrega un comprobante para comenzar.</div>';
+      }
+
+      function coverHTML() {
+        if (!$("#includeCover").checked) return "";
+        return `<section class="print-page pdf-cover">
+          <div class="cover-center"><img class="cover-logo" src="${escapeHTML(state.brand.logo)}" alt="Logotipo"></div>
+          <div class="cover-footer">Conoce lo que podemos hacer por ti<a href="https://www.housemedia.art" target="_blank" rel="noopener">www.HouseMedia.art</a></div>
+        </section>`;
+      }
+
+      function scriptsHTML() {
+        if (!$("#includeScript").checked) return "";
+        return `<section class="print-page script-page">
+          <h1>${escapeHTML($("#scriptTitle").value || "Documento")}</h1>
+          <p class="script-duration">${escapeHTML($("#scriptDuration").value)}</p>
+          ${state.scripts.map(block => `<div class="script-block"><h2>${escapeHTML(block.title)}</h2><p>${escapeHTML(block.content)}</p></div>`).join("") || '<p>Sin contenido.</p>'}
+        </section>`;
+      }
+
+      function commercialDocumentHTML() {
+        const t = totals();
+        const title = $("#documentType").value === "invoice" ? "Factura" : "Proforma";
+        const itemRows = state.items.map((item, index) => `
+          <tr><td>${index + 1}</td><td><div class="line-title">${escapeHTML(item.title)}</div>${item.description ? `<div class="line-description">${escapeHTML(item.description)}</div>` : ""}</td><td>${escapeHTML(item.qty)}</td><td>${Number(item.price) ? money((Number(item.qty)||0) * (Number(item.price)||0)) : ""}</td></tr>`).join("");
+        return `<section class="print-page commercial-page">
+          <div class="doc-header">
+            <img class="doc-logo" src="${escapeHTML(state.brand.isotipo)}" alt="Isotipo House Media">
+            <div class="business-info"><strong>${escapeHTML(state.brand.name)}</strong>RUC: ${escapeHTML(state.brand.taxId)}<br>T. ${escapeHTML(state.brand.phone)}<br>E. ${escapeHTML(state.brand.email)}</div>
+          </div>
+          <div class="document-title-row"><h1 class="document-title">${title} #${escapeHTML($("#docNumber").value)}</h1>${statusBadgeHTML($("#documentStatus").value)}${documentPaymentDetailHTML()}</div>
+          <div class="document-meta">
+            <div class="meta-block"><strong>Nombre del cliente:</strong>${escapeHTML($("#clientName").value)}</div>
+            <div class="meta-block right"><strong>Fecha de emisión:</strong>${escapeHTML(formatDate($("#issueDate").value))}</div>
+            <div class="meta-block"><strong>Concepto de:</strong>${escapeHTML($("#concept").value)}</div>
+            <div class="meta-block right"><strong>Ciudad/País:</strong>${escapeHTML($("#city").value)}</div>
+          </div>
+          <table class="doc-table"><colgroup><col class="num"><col class="description"><col class="qty"><col class="price"></colgroup><thead><tr><th>Nº</th><th>Descripción</th><th>Cant.</th><th>Precio</th></tr></thead><tbody>${itemRows || '<tr><td colspan="4">Sin líneas agregadas.</td></tr>'}</tbody></table>
+          <div class="totals-wrap">
+            <div class="total-line"><strong>Subtotal</strong><span>${money(t.subtotal)}</span></div>
+            ${$("#showTax").checked ? `<div class="total-line"><strong>Impuesto</strong><span>${money(t.taxAmount)}</span></div>` : ""}
+            ${$("#showDiscount").checked ? `<div class="total-line"><strong>Descuento</strong><span>− ${money(t.discount)}</span></div>` : ""}
+            ${$("#showAdvance").checked ? `<div class="total-line"><strong>Adelanto</strong><span>${money(t.advance)}</span></div>` : ""}
+            <div class="total-line grand"><strong>Total</strong><span>${money(t.total)}</span></div>
+          </div>
+          <div class="doc-note">${escapeHTML($("#notes").value)}</div>
+          <div class="doc-footer">
+            ${state.brand.signature ? `<img class="signature-image" src="${escapeHTML(state.brand.signature)}" alt="Firma autorizada">` : ""}
+            ${state.brand.qr ? `<a class="qr-link" href="https://www.housemedia.art" target="_blank" rel="noopener" aria-label="Abrir sitio web de House Media"><img class="qr-image" src="${escapeHTML(state.brand.qr)}" alt="Código QR de House Media"></a>` : ""}
+          </div>
+        </section>`;
+      }
+
+      function galleryHTML() {
+        if (!$("#includeGallery").checked) return "";
+        const categories = state.imageCategories;
+        const denseCategories = categories.length > 3 ? " dense" : "";
+        const content = categories.length ? categories.map((category, categoryIndex) => {
+          const images = category.images || [];
+          const imageCount = Math.max(1, images.length);
+          return `<section class="gallery-category">
+            <h2>${categoryIndex + 1}. ${escapeHTML(category.name || `Categoría ${categoryIndex + 1}`)}</h2>
+            <div class="gallery-image-grid${images.length > 6 ? " dense" : ""}" style="--image-count:${imageCount}">
+              ${images.length ? images.map((image, imageIndex) => `<div class="gallery-image-frame"><img src="${escapeHTML(image.src)}" alt="${escapeHTML(image.name || `Imagen ${imageIndex + 1}`)}"></div>`).join("") : '<div class="appendix-empty">Sin imágenes en esta categoría</div>'}
+            </div>
+          </section>`;
+        }).join("") : '<div class="appendix-empty">Agrega categorías e imágenes desde el formulario.</div>';
+        return `<section class="print-page gallery-page">
+          <header class="appendix-head"><p class="appendix-kicker">Anexo visual</p><h1 class="appendix-title">Galería de imágenes</h1></header>
+          <div class="gallery-categories${denseCategories}" style="--category-count:${Math.max(1, categories.length)}">${content}</div>
+        </section>`;
+      }
+
+      function shortDate(value) {
+        if (!value) return "Sin fecha";
+        const [year, month, day] = value.split("-");
+        return `${day}/${month}/${year}`;
+      }
+
+      function paymentProofsHTML() {
+        if (!$("#includePaymentProofs").checked) return "";
+        const t = totals();
+        const sent = state.paymentProofs.reduce((sum, proof) => sum + (Number(proof.amount) || 0), 0);
+        const pending = Math.max(0, t.total - sent);
+        const count = state.paymentProofs.length;
+        const columns = count <= 1 ? 1 : count <= 4 ? 2 : 3;
+        const proofs = count ? state.paymentProofs.map((proof, index) => `
+          <article class="payment-proof">
+            <h2>${escapeHTML(proof.title || `Comprobante ${index + 1}`)} · ${money(proof.amount)} · ${escapeHTML(shortDate(proof.date))}</h2>
+            <div class="payment-proof-image">${proof.image ? `<img src="${escapeHTML(proof.image)}" alt="Comprobante de pago ${index + 1}">` : '<span class="payment-proof-no-image">Sin imagen del comprobante</span>'}</div>
+            <div class="payment-proof-data">
+              <span><strong>Tipo de pago</strong>${proof.method === "cash" ? "Efectivo" : "Depósito"}</span>
+              <span><strong>Banco</strong>${proof.method === "cash" ? "No aplica" : escapeHTML(proof.bank || "Sin banco")}</span>
+              <span><strong>Depositante</strong>${escapeHTML(proof.depositor || "Sin dato")}</span>
+              <span><strong>Referencia</strong>${proof.method === "cash" ? "No aplica" : escapeHTML(proof.reference || "Sin referencia")}</span>
+            </div>
+          </article>`).join("") : '<div class="appendix-empty">Agrega los comprobantes y sus datos desde el formulario.</div>';
+        return `<section class="print-page payment-proofs-page">
+          <div class="payment-summary">
+            <div class="payment-summary-total">TOTAL DEL DOCUMENTO: ${money(t.total)}</div>
+            <div class="payment-summary-sent">PAGOS ENVIADOS: ${money(sent)}</div>
+            <div class="payment-summary-pending">PAGO PENDIENTE: ${money(pending)}</div>
+          </div>
+          <div class="payment-proof-grid" style="--proof-columns:${columns}">${proofs}</div>
+        </section>`;
+      }
+
+      function renderPreview() {
+        const isInvoice = $("#documentType").value === "invoice";
+        $("#workspaceTitle").textContent = state.editingRecordId ? `Editar ${isInvoice ? "factura" : "proforma"} #${$("#docNumber").value || "sin número"}` : isInvoice ? "Nueva factura" : "Nueva proforma";
+        $("#scriptFields").classList.toggle("visible", $("#includeScript").checked);
+        $("#galleryFields").classList.toggle("visible", $("#includeGallery").checked);
+        $("#paymentProofFields").classList.toggle("visible", $("#includePaymentProofs").checked);
+        state.brand.name = $("#businessName").value;
+        state.brand.taxId = $("#businessTaxId").value;
+        state.brand.phone = $("#businessPhone").value;
+        state.brand.email = $("#businessEmail").value;
+        $("#printDocument").innerHTML = coverHTML() + scriptsHTML() + commercialDocumentHTML() + galleryHTML() + paymentProofsHTML();
+        const t = totals();
+        $("#editorSubtotal").textContent = money(t.subtotal);
+        $("#editorTax").textContent = money(t.taxAmount);
+        $("#editorDeductions").textContent = money(t.discount + t.advance);
+        $("#editorTotal").textContent = money(t.total);
+      }
+
+      function renderAll() {
+        renderItems();
+        renderScripts();
+        renderImageCategories();
+        renderPaymentProofs();
+        renderPreview();
+      }
+
+      function fileToDataURL(file, callback) {
+        if (!file) return;
+        if (!file.type.startsWith("image/")) { toast("Selecciona un archivo de imagen válido."); return; }
+        const reader = new FileReader();
+        reader.onload = () => callback(reader.result);
+        reader.readAsDataURL(file);
+      }
+
+      function imageFileToDataURL(file) {
+        return new Promise((resolve, reject) => {
+          if (!file || !file.type.startsWith("image/")) { reject(new Error("Archivo de imagen no válido")); return; }
+          const reader = new FileReader();
+          reader.onload = () => resolve({ src: reader.result, name: file.name });
+          reader.onerror = () => reject(reader.error || new Error("No se pudo leer la imagen"));
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+        return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+      }
+
+      function setPdfStatus(message, isError = false) {
+        const status = $("#pdfStatus");
+        status.textContent = message;
+        status.classList.add("visible");
+        status.classList.toggle("error", isError);
+      }
+
+      function readFileArrayBuffer(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error || new Error("No se pudo leer el archivo"));
+          reader.readAsArrayBuffer(file);
+        });
+      }
+
+      function selectedPdfPages() {
+        return $$("#pdfPageList input[type=checkbox]")
+          .filter(input => input.checked)
+          .map(input => Number(input.value));
+      }
+
+      function updatePdfSelectionLabel() {
+        const selected = selectedPdfPages().length;
+        const total = state.pdf.pages.length;
+        $("#pdfPageCountLabel").textContent = `${selected} de ${total} páginas`;
+      }
+
+      function renderPdfPages() {
+        const pages = state.pdf.pages;
+        $("#pdfPageList").innerHTML = pages.map((page, index) => `
+          <label class="page-option">
+            <input type="checkbox" value="${index}" checked>
+            <strong>Página ${index + 1}</strong>
+            <span>${Math.round(page.width)} × ${Math.round(page.height)} pt</span>
+          </label>`).join("");
+        $("#pdfCommercialPage").innerHTML = pages.map((page, index) => `<option value="${index}" ${index === pages.length - 1 ? "selected" : ""}>Página ${index + 1}</option>`).join("");
+        updatePdfSelectionLabel();
+      }
+
+      function selectedImportedStatus() {
+        const selected = $("#pdfDocumentStatus").value;
+        return selected === "keep" ? (state.pdf.detectedStatus || "none") : selected;
+      }
+
+      function updatePdfPaymentFields() {
+        const isPaid = selectedImportedStatus() === "paid";
+        const isDeposit = isPaid && $("#pdfPaymentMethod").value === "deposit";
+        $("#pdfPaymentMethodField").classList.toggle("visible", isPaid);
+        $("#pdfPaymentBankField").classList.toggle("visible", isDeposit);
+        $("#pdfPaymentReferenceField").classList.toggle("visible", isDeposit);
+      }
+
+      function selectedPdfPayment() {
+        if (selectedImportedStatus() !== "paid") return { method: "none", bank: "", reference: "" };
+        const method = $("#pdfPaymentMethod").value;
+        return {
+          method,
+          bank: method === "deposit" ? $("#pdfPaymentBank").value : "",
+          reference: method === "deposit" ? $("#pdfPaymentReference").value.trim() : ""
+        };
+      }
+
+      function paymentPdfText(payment) {
+        if (payment.method === "cash") return "Pago: Efectivo";
+        if (payment.method === "deposit") return `Pago: Deposito | Banco: ${payment.bank || "Sin banco"} | Ref: ${payment.reference || "Sin referencia"}`;
+        return "Pago: Ninguno";
+      }
+
+      async function loadPdfFile(file) {
+        if (!file || (!file.type.includes("pdf") && !file.name.toLowerCase().endsWith(".pdf"))) {
+          setPdfStatus("Selecciona un archivo PDF válido.", true);
+          return;
+        }
+        if (!window.PDFLib) {
+          setPdfStatus("No se pudo cargar el procesador local de PDF.", true);
+          return;
+        }
+        setPdfStatus("Analizando el documento localmente…");
+        try {
+          const buffer = await readFileArrayBuffer(file);
+          const bytes = new Uint8Array(buffer);
+          const documentPdf = await PDFLib.PDFDocument.load(bytes, { updateMetadata: false });
+          const pages = documentPdf.getPages().map(page => page.getSize());
+          let detectedType = /factura/i.test(file.name) ? "invoice" : /proforma/i.test(file.name) ? "quote" : "document";
+          let detectedStatus = "none";
+          let extractedData = null;
+          try {
+            extractedData = await extractEditablePdfData(bytes);
+            if (extractedData.commercial?.type) detectedType = extractedData.commercial.type;
+            detectedStatus = extractedData.commercial?.status || "none";
+          } catch (textError) {
+            console.warn("El PDF se abrió, pero no fue posible detectar todos sus campos.", textError);
+          }
+          state.pdf = { file, bytes, document: documentPdf, pages, detectedType, detectedStatus, extractedData };
+          const detectedNumber = file.name.match(/#\s*([a-zA-Z0-9]+)/)?.[1] || file.name.match(/(?:factura|proforma)[-_ ]*([a-zA-Z0-9]+)/i)?.[1] || "";
+          $("#pdfDocumentNumber").value = extractedData?.commercial?.number || detectedNumber.replace(/\.pdf$/i, "");
+          $("#pdfDocumentStatus").value = "keep";
+          const importedPayment = extractedData?.commercial?.payment || {};
+          $("#pdfPaymentMethod").value = importedPayment.method === "deposit" ? "deposit" : "cash";
+          $("#pdfPaymentBank").value = importedPayment.bank || "LAFISE";
+          $("#pdfPaymentReference").value = importedPayment.reference || "";
+          updatePdfPaymentFields();
+          const currentStatusDefinition = getStatus(detectedStatus);
+          const currentStatus = currentStatusDefinition?.label || "Sin estado";
+          const currentStatusClass = currentStatusDefinition?.className || "none";
+          $("#pdfValidationGrid").innerHTML = `
+            <div class="validation-card"><span>Archivo</span><strong>${escapeHTML(file.name)}</strong></div>
+            <div class="validation-card status-card ${currentStatusClass}"><span>Estado actual</span><strong>${escapeHTML(currentStatus)}</strong></div>
+            <div class="validation-card"><span>Páginas</span><strong>${pages.length}</strong></div>`;
+          renderPdfPages();
+          $("#pdfConversionOptions").classList.add("visible");
+          $("#pdfPagesPanel").classList.add("visible");
+          const detected = detectedType === "invoice" ? "factura" : detectedType === "quote" ? "proforma" : "documento";
+          setPdfStatus(`PDF válido: ${pages.length} página${pages.length === 1 ? "" : "s"}, ${formatFileSize(file.size)}. Se detectó como ${detected}, estado actual: ${currentStatus}.`);
+        } catch (error) {
+          state.pdf = { file: null, bytes: null, document: null, pages: [], detectedType: "document", detectedStatus: "none", extractedData: null };
+          $("#pdfConversionOptions").classList.remove("visible");
+          $("#pdfPagesPanel").classList.remove("visible");
+          $("#pdfPaymentMethodField").classList.remove("visible");
+          $("#pdfPaymentBankField").classList.remove("visible");
+          $("#pdfPaymentReferenceField").classList.remove("visible");
+          setPdfStatus("No se pudo abrir el PDF. Puede estar protegido, dañado o cifrado.", true);
+        }
+      }
+
+      function ensurePdfTextReader() {
+        if (!window.pdfjsLib || !window.pdfjsWorker?.WorkerMessageHandler) throw new Error("El lector local de texto PDF no está disponible.");
+        return window.pdfjsLib;
+      }
+
+      function joinPdfItems(items) {
+        let text = "";
+        let previousEnd = null;
+        items.forEach(item => {
+          const gap = previousEnd === null ? 0 : item.x - previousEnd;
+          if (text && gap > 1.5 && !/^[,.;:!?)]/.test(item.text)) text += " ";
+          text += item.text;
+          previousEnd = item.x + item.width;
+        });
+        return text.replace(/\s+/g, " ").trim();
+      }
+
+      function buildPdfTextSegments(items) {
+        const rows = [];
+        [...items].sort((a, b) => b.y - a.y || a.x - b.x).forEach(item => {
+          let row = rows.find(candidate => Math.abs(candidate.y - item.y) <= 2.4);
+          if (!row) { row = { y: item.y, items: [] }; rows.push(row); }
+          row.items.push(item);
+        });
+        return rows.sort((a, b) => b.y - a.y).flatMap(row => {
+          const sorted = row.items.sort((a, b) => a.x - b.x);
+          const groups = [];
+          sorted.forEach(item => {
+            const current = groups[groups.length - 1];
+            const previous = current?.[current.length - 1];
+            const gap = previous ? item.x - (previous.x + previous.width) : 0;
+            if (!current || gap > 20) groups.push([item]);
+            else current.push(item);
+          });
+          return groups.map(group => ({
+            text: joinPdfItems(group),
+            x: group[0].x,
+            y: row.y,
+            width: Math.max(...group.map(item => item.x + item.width)) - group[0].x,
+            maxHeight: Math.max(...group.map(item => item.height)),
+            fontNames: [...new Set(group.map(item => item.fontName))],
+            items: group
+          })).filter(segment => segment.text);
+        });
+      }
+
+      function normalizePdfText(value = "") {
+        return String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      }
+
+      function parsePdfAmount(value = "") {
+        const compact = String(value).replace(/\s+/g, "");
+        const match = compact.match(/[−-]?\d[\d.,]*/);
+        if (!match) return 0;
+        let number = match[0].replace("−", "-");
+        if (number.includes(",") && number.includes(".")) number = number.replace(/,/g, "");
+        else if (number.includes(",")) {
+          const decimals = number.length - number.lastIndexOf(",") - 1;
+          number = decimals <= 2 ? number.replace(",", ".") : number.replace(/,/g, "");
+        }
+        return Number(number) || 0;
+      }
+
+      function parseSpanishDate(value = "") {
+        const normalized = normalizePdfText(value);
+        const match = normalized.match(/(\d{1,2})\s+de\s+([a-z]+)\s+(?:de|del)\s+(\d{4})/);
+        if (!match) return "";
+        const months = { enero:1, febrero:2, marzo:3, abril:4, mayo:5, junio:6, julio:7, agosto:8, septiembre:9, setiembre:9, octubre:10, noviembre:11, diciembre:12 };
+        const month = months[match[2]];
+        return month ? `${match[3]}-${String(month).padStart(2, "0")}-${String(match[1]).padStart(2, "0")}` : "";
+      }
+
+      function valueBelowLabel(page, pattern, side) {
+        const label = page.segments.find(segment => pattern.test(normalizePdfText(segment.text)));
+        if (!label) return "";
+        const candidates = page.segments.filter(segment => {
+          const distance = label.y - segment.y;
+          const sideMatches = side === "right" ? segment.x > page.width * .5 : segment.x < page.width * .5;
+          return distance > 2 && distance < 34 && sideMatches;
+        }).sort((a, b) => Math.abs(label.y - a.y) - Math.abs(label.y - b.y));
+        return candidates[0]?.text || "";
+      }
+
+      function parseCommercialPdfPage(page) {
+        const rawTitle = page.items.find(item => /^(factura|proforma)\s*#?/i.test(item.text));
+        const groupedTitle = page.segments.find(segment => /^(factura|proforma)\s*#?/i.test(segment.text));
+        const title = rawTitle ? { text: rawTitle.text, x: rawTitle.x, y: rawTitle.y, width: rawTitle.width, maxHeight: rawTitle.height, fontNames: [rawTitle.fontName] } : groupedTitle;
+        if (!title) return null;
+        const titleMatch = title.text.match(/^(Factura|Proforma)\s*#?\s*([a-zA-Z0-9-]*)/i);
+        const statusByLabel = { pagado: "paid", vencido: "overdue", pendiente: "pending", activo: "active", sinestado: "none" };
+        const statusTextItems = page.items.map(item => ({ item, key: statusByLabel[normalizePdfText(item.text).replace(/[^a-z]/g, "")] })).filter(entry => entry.key);
+        const status = statusTextItems.at(-1)?.key || "none";
+        const paymentTextItems = page.items.filter(item => /^pago\s*:/i.test(normalizePdfText(item.text)));
+        const latestPaymentText = paymentTextItems.at(-1)?.text || "";
+        const normalizedPaymentText = normalizePdfText(latestPaymentText);
+        const bankMatch = latestPaymentText.match(/banco\s*:\s*([^|]+)/i);
+        const referenceMatch = latestPaymentText.match(/ref(?:erencia)?\s*:\s*(.+)$/i);
+        const payment = normalizedPaymentText.includes("deposito") ? {
+          method: "deposit",
+          bank: bankMatch?.[1]?.trim() || "",
+          reference: referenceMatch?.[1]?.trim() || ""
+        } : normalizedPaymentText.includes("efectivo") ? { method: "cash", bank: "", reference: "" } : { method: "none", bank: "", reference: "" };
+        const visibleStatusItems = statusTextItems.filter(entry => entry.key !== "none").map(entry => entry.item);
+        const separatorItems = page.items.filter(item => item.text.trim() === "-" && Math.abs(item.y - title.y) < 5 && item.x > title.x + title.width);
+        const detectedBadgeX = visibleStatusItems.length ? Math.min(...visibleStatusItems.map(item => item.x - 26)) : title.x + title.width + 24;
+        const detectedStatusRight = visibleStatusItems.length ? Math.max(...visibleStatusItems.map(item => item.x + item.width + 15)) : detectedBadgeX;
+        const detectedPaymentRight = paymentTextItems.length ? Math.max(...paymentTextItems.map(item => item.x + item.width + 8)) : detectedBadgeX;
+        const detectedBadgeRight = Math.max(detectedStatusRight, detectedPaymentRight);
+        const header = page.segments.find(segment => normalizePdfText(segment.text).includes("descripcion"));
+        const numberHeader = page.segments.find(segment => /^(n[ºo°]|no\.?)$/i.test(normalizePdfText(segment.text)));
+        const quantityHeader = page.segments.find(segment => /^(cant\.?|cantidad)$/i.test(normalizePdfText(segment.text)));
+        const priceHeader = page.segments.find(segment => normalizePdfText(segment.text).includes("precio"));
+        const totalLabels = page.segments.filter(segment => segment.x > page.width * .55 && /^(subtotal|impuesto|descuento|adelanto|total)$/i.test(normalizePdfText(segment.text)));
+        const totalsTopY = totalLabels.length ? Math.max(...totalLabels.map(segment => segment.y)) : page.height * .32;
+        const headerY = header?.y ?? page.height * .66;
+        const descriptionStart = Math.max(0, (header?.x ?? page.width * .17) - 8);
+        const numberLimit = header ? header.x - 3 : page.width * .18;
+        const quantityStart = quantityHeader ? Math.max(descriptionStart + 40, quantityHeader.x - 28) : page.width * .61;
+        const priceStart = priceHeader ? Math.max(quantityStart + 28, priceHeader.x - 28) : page.width * .76;
+        let rowAnchors = page.segments.filter(segment => segment.x < numberLimit && /^\d+$/.test(segment.text) && segment.y < headerY - 4 && segment.y > totalsTopY + 3).sort((a, b) => b.y - a.y);
+        const headingFonts = new Set([...(header?.fontNames || []), ...(numberHeader?.fontNames || [])]);
+        const titleAnchors = page.segments.filter(segment =>
+          segment.x >= descriptionStart && segment.x < quantityStart &&
+          segment.y < headerY - 4 && segment.y > totalsTopY + 3 &&
+          segment.fontNames.some(fontName => headingFonts.has(fontName)) &&
+          !/^[a-z]\.|^\d+[.)]$/i.test(segment.text.trim())
+        ).sort((a, b) => b.y - a.y);
+        if (titleAnchors.length > rowAnchors.length) rowAnchors = titleAnchors;
+        rowAnchors = rowAnchors.filter((row, index, rows) => index === 0 || Math.abs(rows[index - 1].y - row.y) > 3);
+        const items = rowAnchors.map((row, index) => {
+          const lowerY = rowAnchors[index + 1]?.y ?? totalsTopY;
+          const withinRow = page.segments.filter(segment => segment.y <= row.y + 2.5 && segment.y > lowerY + 2.5);
+          const descriptionSegments = withinRow.filter(segment => segment.x >= descriptionStart && segment.x < quantityStart).sort((a, b) => b.y - a.y || a.x - b.x);
+          const titleSegment = descriptionSegments.find(segment => Math.abs(segment.y - row.y) <= 2.5) || descriptionSegments[0];
+          const description = descriptionSegments.filter(segment => segment !== titleSegment).map(segment => segment.text).join("\n");
+          const quantityText = withinRow.filter(segment => segment.x >= quantityStart && segment.x < priceStart).map(segment => segment.text).join("");
+          const priceText = withinRow.filter(segment => segment.x >= priceStart).map(segment => segment.text).join("");
+          return { title: titleSegment?.text || `Línea ${index + 1}`, description, qty: parsePdfAmount(quantityText) || 1, price: parsePdfAmount(priceText) };
+        }).filter(item => item.title && !/^(descripcion|cant\.?|precio)$/i.test(normalizePdfText(item.title)));
+        const totals = {};
+        totalLabels.forEach(label => {
+          const amount = page.segments.filter(segment => Math.abs(segment.y - label.y) <= 2.5 && segment.x > label.x + label.width + 8).map(segment => segment.text).join("");
+          totals[normalizePdfText(label.text)] = parsePdfAmount(amount);
+        });
+        const totalBottomY = totalLabels.length ? Math.min(...totalLabels.map(segment => segment.y)) : totalsTopY;
+        const note = page.segments.filter(segment => segment.x < page.width * .58 && segment.y < totalBottomY - 2 && segment.y > Math.max(45, totalBottomY - 90)).sort((a, b) => b.y - a.y).map(segment => segment.text).join("\n");
+        const allText = page.segments.map(segment => segment.text).join(" ");
+        const currency = allText.includes("C$") ? "C$" : allText.includes("U$") ? "U$" : "$";
+        return {
+          type: titleMatch?.[1]?.toLowerCase() === "factura" ? "invoice" : "quote",
+          number: titleMatch?.[2] || "",
+          status,
+          payment,
+          layout: {
+            titleX: title.x,
+            titleY: title.y,
+            titleWidth: title.width,
+            titleHeight: title.maxHeight,
+            separatorX: separatorItems.length ? Math.min(...separatorItems.map(item => item.x)) : title.x + title.width + 9.5,
+            badgeX: detectedBadgeX,
+            badgeRight: detectedBadgeRight,
+            statusY: statusTextItems.at(-1)?.item.y || title.y
+          },
+          clientName: valueBelowLabel(page, /nombre del cliente/, "left"),
+          issueDate: parseSpanishDate(valueBelowLabel(page, /fecha de emision/, "right")),
+          concept: valueBelowLabel(page, /concepto de/, "left"),
+          city: valueBelowLabel(page, /ciudad\/?pais/, "right"),
+          items,
+          currency,
+          subtotal: totals.subtotal || items.reduce((sum, item) => sum + item.qty * item.price, 0),
+          taxAmount: totals.impuesto || 0,
+          discount: totals.descuento || 0,
+          advance: totals.adelanto || 0,
+          showTax: Object.prototype.hasOwnProperty.call(totals, "impuesto"),
+          showDiscount: Object.prototype.hasOwnProperty.call(totals, "descuento"),
+          showAdvance: Object.prototype.hasOwnProperty.call(totals, "adelanto"),
+          notes: note
+        };
+      }
+
+      function parseScriptPdfPages(pages, commercialIndex) {
+        const scriptPages = pages.filter((page, index) => index !== commercialIndex && !page.segments.some(segment => normalizePdfText(segment.text).includes("conoce lo que podemos hacer por ti")));
+        if (!scriptPages.length) return { title: "", duration: "", blocks: [] };
+        const firstTitle = scriptPages[0].segments.find(segment => segment.maxHeight >= 16);
+        const headingFont = firstTitle?.fontNames[0];
+        const duration = scriptPages[0].segments.find(segment => normalizePdfText(segment.text).startsWith("duracion"))?.text || "";
+        const blocks = [];
+        let current = null;
+        scriptPages.forEach((page, pageIndex) => {
+          page.segments.forEach(segment => {
+            if (pageIndex === 0 && (segment === firstTitle || segment.text === duration)) return;
+            if (normalizePdfText(segment.text).startsWith("duracion")) return;
+            const isMainTitle = segment.maxHeight >= 16;
+            const isHeading = !isMainTitle && headingFont && segment.fontNames.length === 1 && segment.fontNames[0] === headingFont && segment.maxHeight >= 11 && segment.x < page.width * .22;
+            if (isMainTitle || isHeading) {
+              current = { title: segment.text, content: "" };
+              blocks.push(current);
+              return;
+            }
+            if (!current) { current = { title: "Texto importado", content: "" }; blocks.push(current); }
+            current.content += `${current.content ? "\n" : ""}${segment.text}`;
+          });
+        });
+        return { title: firstTitle?.text || "Guion importado", duration, blocks: blocks.filter(block => block.title || block.content) };
+      }
+
+      async function extractEditablePdfData(bytes) {
+        const pdfjs = ensurePdfTextReader();
+        const documentTask = pdfjs.getDocument({ data: bytes.slice() });
+        const pdf = await documentTask.promise;
+        const pages = [];
+        try {
+          for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+            const page = await pdf.getPage(pageNumber);
+            const viewport = page.getViewport({ scale: 1 });
+            const content = await page.getTextContent();
+            const items = content.items.filter(item => "str" in item && item.str.trim()).map(item => ({ text: item.str.trim(), x: item.transform[4], y: item.transform[5], width: item.width || 0, height: item.height || Math.abs(item.transform[3]) || 0, fontName: item.fontName || "" }));
+            pages.push({ width: viewport.width, height: viewport.height, items, segments: buildPdfTextSegments(items) });
+          }
+        } finally {
+          await pdf.destroy();
+        }
+        const commercialIndex = pages.findIndex(page => page.segments.some(segment => /^(factura|proforma)\s*#?/i.test(segment.text)));
+        const commercial = commercialIndex >= 0 ? parseCommercialPdfPage(pages[commercialIndex]) : null;
+        const scripts = parseScriptPdfPages(pages, commercialIndex);
+        return { commercial, scripts, includeCover: pages.some(page => page.segments.some(segment => normalizePdfText(segment.text).includes("conoce lo que podemos hacer por ti"))) };
+      }
+
+      function populateImportedEditor(data) {
+        const outputType = $("#pdfOutputType").value;
+        const selectedStatus = $("#pdfDocumentStatus").value;
+        const commercial = data.commercial || {};
+        const resolvedType = outputType === "keep" ? (commercial.type || state.pdf.detectedType) : outputType;
+        resetDocumentForm();
+        $("#documentType").value = resolvedType === "invoice" ? "invoice" : "quote";
+        $("#docNumber").value = commercial.number || $("#pdfDocumentNumber").value.trim();
+        $("#documentStatus").value = selectedStatus === "keep" ? (commercial.status || state.pdf.detectedStatus || "none") : selectedStatus;
+        const importedPayment = selectedPdfPayment();
+        $("#documentPaymentMethod").value = importedPayment.method === "deposit" ? "deposit" : "cash";
+        $("#documentPaymentBank").value = importedPayment.bank || "LAFISE";
+        $("#documentPaymentReference").value = importedPayment.reference || "";
+        updateDocumentPaymentFields();
+        $("#issueDate").value = commercial.issueDate || todayISO();
+        $("#clientName").value = commercial.clientName || "";
+        $("#concept").value = commercial.concept || "";
+        $("#city").value = commercial.city || "";
+        $("#includeCover").checked = data.includeCover;
+        state.items = commercial.items || [];
+        if (["U$", "C$", "$"].includes(commercial.currency)) $("#currency").value = commercial.currency;
+        $("#discount").value = commercial.discount || 0;
+        $("#advance").value = commercial.advance || 0;
+        const subtotal = commercial.subtotal || state.items.reduce((sum, item) => sum + item.qty * item.price, 0);
+        $("#tax").value = subtotal && commercial.taxAmount ? Number((commercial.taxAmount / subtotal * 100).toFixed(2)) : 0;
+        $("#showDiscount").checked = Boolean(commercial.showDiscount);
+        $("#showTax").checked = Boolean(commercial.showTax);
+        $("#showAdvance").checked = Boolean(commercial.showAdvance);
+        $("#notes").value = commercial.notes || "";
+        const scripts = data.scripts || { title: "", duration: "", blocks: [] };
+        $("#includeScript").checked = scripts.blocks.length > 0;
+        $("#scriptTitle").value = scripts.title || "";
+        $("#scriptDuration").value = scripts.duration || "";
+        state.scripts = scripts.blocks || [];
+        $("#includeGallery").checked = false;
+        $("#includePaymentProofs").checked = false;
+        state.imageCategories = [];
+        state.paymentProofs = [];
+        state.editingRecordId = null;
+      }
+
+      async function editImportedDocument() {
+        if (!state.pdf.bytes) { setPdfStatus("Primero selecciona un PDF para editarlo.", true); return; }
+        const button = $("#editImportedDocumentButton");
+        button.disabled = true;
+        button.textContent = "Leyendo datos del PDF…";
+        try {
+          if (!state.pdf.extractedData) state.pdf.extractedData = await extractEditablePdfData(state.pdf.bytes);
+          populateImportedEditor(state.pdf.extractedData);
+          openDocument(false);
+          const lines = state.items.length;
+          toast(`PDF cargado en el editor: ${lines} línea${lines === 1 ? "" : "s"} recuperada${lines === 1 ? "" : "s"}.`, 5200);
+        } catch (error) {
+          console.error(error);
+          setPdfStatus("No se pudieron extraer los campos de este PDF. Comprueba que contenga texto seleccionable y que haya sido generado por House Media.", true);
+        } finally {
+          button.disabled = false;
+          button.textContent = "Editar completo el documento";
+        }
+      }
+
+      function drawPdfStatusBadge(page, font, statusKey, x, titleY) {
+        const status = getStatus(statusKey);
+        if (!status) return 0;
+        const fontSize = 8.25;
+        const labelWidth = font.widthOfTextAtSize(status.label, fontSize);
+        const badgeWidth = Math.max(56, labelWidth + 27);
+        const badgeY = titleY - 7;
+        const badgeHeight = 25;
+        const [red, green, blue] = status.color;
+        const white = PDFLib.rgb(1, 1, 1);
+        page.drawRectangle({ x, y: badgeY, width: badgeWidth, height: badgeHeight, color: PDFLib.rgb(red, green, blue) });
+        if (statusKey === "paid") {
+          page.drawLine({ start: { x: x + 7, y: badgeY + 12 }, end: { x: x + 10, y: badgeY + 9 }, thickness: 1.4, color: white });
+          page.drawLine({ start: { x: x + 10, y: badgeY + 9 }, end: { x: x + 16, y: badgeY + 16 }, thickness: 1.4, color: white });
+        } else if (statusKey === "pending" || statusKey === "active") {
+          page.drawCircle({ x: x + 11, y: badgeY + 12, size: 2.5, color: white });
+        } else {
+          page.drawText("!", { x: x + 9, y: titleY, size: 9, font, color: white });
+        }
+        page.drawText(status.label, { x: x + 20, y: titleY, size: fontSize, font, color: white });
+        return badgeWidth;
+      }
+
+      async function processImportedPdf() {
+        if (!state.pdf.bytes) { setPdfStatus("Primero selecciona un PDF.", true); return; }
+        const selected = selectedPdfPages();
+        if (!selected.length) { setPdfStatus("Conserva al menos una página para crear el documento.", true); return; }
+        const outputType = $("#pdfOutputType").value;
+        const statusChoice = $("#pdfDocumentStatus").value;
+        const commercialOriginalIndex = Number($("#pdfCommercialPage").value);
+        const originalCommercial = state.pdf.extractedData?.commercial || {};
+        const requestedNumber = $("#pdfDocumentNumber").value.trim();
+        const originalNumber = originalCommercial.number || requestedNumber;
+        const numberChanged = Boolean(originalNumber && requestedNumber && originalNumber !== requestedNumber);
+        const oldStatus = originalCommercial.status || state.pdf.detectedStatus || "none";
+        const resolvedStatus = statusChoice === "keep" ? oldStatus : statusChoice;
+        const originalPayment = originalCommercial.payment || { method: "none", bank: "", reference: "" };
+        const requestedPayment = selectedPdfPayment();
+        const paymentChanged = originalPayment.method !== requestedPayment.method || originalPayment.bank !== requestedPayment.bank || originalPayment.reference !== requestedPayment.reference;
+        const requestedVisualEdit = outputType !== "keep" || statusChoice !== "keep" || numberChanged || paymentChanged;
+        if (requestedVisualEdit && !selected.includes(commercialOriginalIndex)) {
+          setPdfStatus("La página seleccionada para editar debe estar marcada para conservarse.", true);
+          return;
+        }
+        const button = $("#processPdfButton");
+        button.disabled = true;
+        button.textContent = "Procesando…";
+        try {
+          const source = await PDFLib.PDFDocument.load(state.pdf.bytes.slice(), { updateMetadata: false });
+          const output = await PDFLib.PDFDocument.create();
+          const copied = await output.copyPages(source, selected);
+          copied.forEach(page => output.addPage(page));
+          output.setProducer("House Media - Generador local");
+          output.setCreator("House Media");
+
+          if (requestedVisualEdit) {
+            const outputPageIndex = selected.indexOf(commercialOriginalIndex);
+            const page = output.getPage(outputPageIndex);
+            const { width, height } = page.getSize();
+            const font = await output.embedFont(PDFLib.StandardFonts.HelveticaBold);
+            const regularFont = await output.embedFont(PDFLib.StandardFonts.Helvetica);
+            const resolvedType = outputType === "keep" ? state.pdf.detectedType : outputType;
+            const label = resolvedType === "invoice" ? "Factura" : resolvedType === "quote" ? "Proforma" : "";
+            const originalType = originalCommercial.type || state.pdf.detectedType;
+            const originalLabel = originalType === "invoice" ? "Factura" : originalType === "quote" ? "Proforma" : label;
+            const oldTitleText = `${originalLabel}${originalNumber && originalLabel ? ` #${originalNumber}` : ""}`;
+            const titleText = `${label}${requestedNumber && label ? ` #${requestedNumber}` : ""}`;
+            const titleChanged = titleText !== oldTitleText;
+            const layout = originalCommercial.layout || {};
+            const titleX = Number.isFinite(layout.titleX) ? layout.titleX : width * .08;
+            const titleY = Number.isFinite(layout.titleY) ? layout.titleY : height * .775;
+            const titleSize = 17.25;
+            const sourceTitleWidth = Number.isFinite(layout.titleWidth) ? layout.titleWidth : font.widthOfTextAtSize(oldTitleText, titleSize);
+            const badgeX = titleChanged ? titleX + font.widthOfTextAtSize(titleText, titleSize) + 24 : titleX + sourceTitleWidth + 24;
+            const separatorX = titleChanged ? badgeX - 15 : (Number.isFinite(layout.separatorX) ? layout.separatorX : badgeX - 15);
+            const newBadgeWidth = getStatus(resolvedStatus) ? Math.max(56, font.widthOfTextAtSize(getStatus(resolvedStatus).label, 8.25) + 27) : 0;
+            const visiblePaymentText = resolvedStatus === "paid" ? paymentPdfText(requestedPayment) : "";
+            const paymentX = badgeX + newBadgeWidth + 8;
+            const paymentMaxWidth = Math.max(70, width - paymentX - 16);
+            let paymentFontSize = 7.5;
+            while (visiblePaymentText && paymentFontSize > 6 && regularFont.widthOfTextAtSize(visiblePaymentText, paymentFontSize) + 16 > paymentMaxWidth) paymentFontSize -= .25;
+            const paymentBoxWidth = visiblePaymentText ? Math.min(paymentMaxWidth, regularFont.widthOfTextAtSize(visiblePaymentText, paymentFontSize) + 16) : 0;
+            const newVisualRight = visiblePaymentText ? paymentX + paymentBoxWidth : badgeX + newBadgeWidth;
+            const existingBadgeX = Number.isFinite(layout.badgeX) ? layout.badgeX : titleX + sourceTitleWidth + 24;
+            const existingBadgeRight = Number.isFinite(layout.badgeRight) ? layout.badgeRight : existingBadgeX + (getStatus(oldStatus) ? Math.max(56, font.widthOfTextAtSize(getStatus(oldStatus).label, 8.25) + 27) : 0);
+            const statusY = Number.isFinite(layout.statusY) ? layout.statusY : titleY;
+            const coverY = Math.min(titleY, statusY) - 8;
+            const coverTop = Math.max(titleY, statusY) + 19;
+            if (titleChanged) {
+              const coverRight = Math.min(width - 16, Math.max(existingBadgeRight + 4, newVisualRight + 4));
+              page.drawRectangle({ x: titleX - 4, y: coverY, width: coverRight - titleX + 4, height: coverTop - coverY, color: PDFLib.rgb(1, 1, 1) });
+              page.drawText(titleText, { x: titleX, y: titleY, size: titleSize, font, color: PDFLib.rgb(.04, .04, .05) });
+            } else if (statusChoice !== "keep" || paymentChanged) {
+              const coverX = Math.min(separatorX, existingBadgeX) - 4;
+              const coverRight = Math.min(width - 16, Math.max(existingBadgeRight + 4, newVisualRight + 4));
+              page.drawRectangle({ x: coverX, y: coverY, width: coverRight - coverX, height: coverTop - coverY, color: PDFLib.rgb(1, 1, 1) });
+            }
+            if (resolvedStatus !== "none" && (titleChanged || statusChoice !== "keep" || paymentChanged)) {
+              page.drawText("-", { x: separatorX, y: titleY, size: 11, font, color: PDFLib.rgb(.45, .47, .51) });
+              const drawnBadgeWidth = drawPdfStatusBadge(page, font, resolvedStatus, badgeX, titleY);
+              if (resolvedStatus === "paid") {
+                const detailX = badgeX + drawnBadgeWidth + 8;
+                page.drawRectangle({ x: detailX, y: titleY - 4.5, width: paymentBoxWidth, height: 20, color: PDFLib.rgb(.94, .95, .96) });
+                page.drawText(visiblePaymentText, { x: detailX + 8, y: titleY + .5, size: paymentFontSize, font: regularFont, color: PDFLib.rgb(.18, .21, .27) });
+              }
+            } else if (statusChoice === "none") {
+              page.drawText("Sin estado", { x: badgeX, y: titleY, size: 1, font, color: PDFLib.rgb(1, 1, 1) });
+            }
+            if (resolvedStatus !== "paid") page.drawText("Pago: Ninguno", { x: badgeX, y: titleY, size: 1, font: regularFont, color: PDFLib.rgb(1, 1, 1) });
+          }
+
+          const outputBytes = await output.save();
+          const blob = new Blob([outputBytes], { type: "application/pdf" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          const number = $("#pdfDocumentNumber").value.trim() || "documento";
+          const resolvedDownloadType = outputType === "keep" ? state.pdf.detectedType : outputType;
+          const label = resolvedDownloadType === "invoice" ? "Factura" : resolvedDownloadType === "quote" ? "Proforma" : "Documento-procesado";
+          const client = filenamePart(originalCommercial.clientName, "Cliente");
+          link.href = url;
+          link.download = `${label}#${filenamePart(number, "SinNumero")}-${client}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 2000);
+          setPdfStatus(`Documento listo: se conservaron ${selected.length} de ${state.pdf.pages.length} páginas.`);
+        } catch (error) {
+          setPdfStatus("No se pudo procesar el PDF. Intenta con un documento generado por esta aplicación.", true);
+        } finally {
+          button.disabled = false;
+          button.textContent = "Descargar PDF procesado";
+        }
+      }
+
+      let pendingPdfFilename = "";
+      let pendingPdfKind = "Documento";
+
+      function filenamePart(value, fallback) {
+        const primaryName = String(value || "").split(/\s+[–—-]\s+/)[0];
+        return primaryName
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-zA-Z0-9]/g, "") || fallback;
+      }
+
+      function buildPdfFilename() {
+        const kind = $("#documentType").value === "invoice" ? "Factura" : "Proforma";
+        const number = filenamePart($("#docNumber").value, "SinNumero");
+        const client = filenamePart($("#clientName").value, "Cliente");
+        return `${kind}#${number}-${client}`;
+      }
+
+      async function printDocument() {
+        renderPreview();
+        try {
+          await saveCurrentDocument(false);
+        } catch (error) {
+          console.error(error);
+          toast("El PDF se abrirá, pero no fue posible guardarlo en el archivo local.", 5200);
+        }
+        pendingPdfKind = $("#documentType").value === "invoice" ? "Factura" : "Proforma";
+        pendingPdfFilename = buildPdfFilename();
+        document.title = pendingPdfFilename;
+        toast("Documento guardado. En la ventana siguiente elige “Guardar como PDF”.");
+        setTimeout(() => window.print(), 240);
+      }
+
+      function showSuccessModal(kind) {
+        $("#successTitle").textContent = `${kind} generada con éxito`;
+        $("#successModal").classList.add("visible");
+        $("#successModal").setAttribute("aria-hidden", "false");
+        setTimeout(() => $("#acceptSuccess").focus(), 30);
+      }
+
+      function closeSuccessModal() {
+        $("#successModal").classList.remove("visible");
+        $("#successModal").setAttribute("aria-hidden", "true");
+      }
+
+      function clearCurrentForm() {
+        if (!confirm("¿Deseas vaciar el contenido de este documento?")) return;
+        resetDocumentForm();
+        renderAll();
+        toast("Formulario limpio.");
+      }
+
+      function restoreBrand() {
+        state.brand = { ...defaultBrand };
+        $("#businessName").value = defaultBrand.name;
+        $("#businessTaxId").value = defaultBrand.taxId;
+        $("#businessPhone").value = defaultBrand.phone;
+        $("#businessEmail").value = defaultBrand.email;
+        $("#logoInput").value = "";
+        $("#isotipoInput").value = "";
+        $("#signatureInput").value = "";
+        $("#qrInput").value = "";
+        renderPreview();
+        toast("Datos de House Media restaurados.");
+      }
+
+      document.addEventListener("click", event => {
+        const create = event.target.closest("[data-create]");
+        if (create) { openDocument(); return; }
+        const route = event.target.closest("[data-route]");
+        if (route) { showView(route.dataset.route); return; }
+        const viewRecord = event.target.closest("[data-view-record]");
+        if (viewRecord) { openArchivePreview(viewRecord.dataset.viewRecord); return; }
+        const editRecord = event.target.closest("[data-edit-record]");
+        if (editRecord) { editArchivedDocument(editRecord.dataset.editRecord); return; }
+        const deleteRecord = event.target.closest("[data-delete-record]");
+        if (deleteRecord) { deleteArchivedDocument(deleteRecord.dataset.deleteRecord); return; }
+        const removeItem = event.target.closest("[data-remove-item]");
+        if (removeItem) { state.items.splice(Number(removeItem.dataset.removeItem), 1); renderAll(); return; }
+        const removeScript = event.target.closest("[data-remove-script]");
+        if (removeScript) { state.scripts.splice(Number(removeScript.dataset.removeScript), 1); renderAll(); return; }
+        const removeCategory = event.target.closest("[data-remove-category]");
+        if (removeCategory) { state.imageCategories.splice(Number(removeCategory.dataset.removeCategory), 1); renderAll(); return; }
+        const removeGalleryImage = event.target.closest("[data-remove-gallery-image]");
+        if (removeGalleryImage) {
+          const [categoryIndex, imageIndex] = removeGalleryImage.dataset.removeGalleryImage.split(":").map(Number);
+          state.imageCategories[categoryIndex]?.images.splice(imageIndex, 1);
+          renderAll();
+          return;
+        }
+        const removeProof = event.target.closest("[data-remove-proof]");
+        if (removeProof) { state.paymentProofs.splice(Number(removeProof.dataset.removeProof), 1); renderAll(); return; }
+      });
+
+      document.addEventListener("keydown", event => {
+        if ((event.key === "Enter" || event.key === " ") && event.target.matches(".doc-card")) event.target.click();
+      });
+
+      $("#itemList").addEventListener("input", event => {
+        const card = event.target.closest("[data-item-index]");
+        if (!card || !event.target.dataset.itemField) return;
+        const index = Number(card.dataset.itemIndex);
+        const field = event.target.dataset.itemField;
+        state.items[index][field] = ["qty","price"].includes(field) ? Number(event.target.value) : event.target.value;
+        renderPreview();
+      });
+
+      $("#scriptList").addEventListener("input", event => {
+        const card = event.target.closest("[data-script-index]");
+        if (!card || !event.target.dataset.scriptField) return;
+        state.scripts[Number(card.dataset.scriptIndex)][event.target.dataset.scriptField] = event.target.value;
+        renderPreview();
+      });
+
+      $("#galleryCategoryList").addEventListener("input", event => {
+        const card = event.target.closest("[data-category-index]");
+        if (!card || !event.target.dataset.categoryField) return;
+        state.imageCategories[Number(card.dataset.categoryIndex)][event.target.dataset.categoryField] = event.target.value;
+        renderPreview();
+      });
+
+      $("#galleryCategoryList").addEventListener("change", async event => {
+        if (!event.target.matches("[data-gallery-upload]")) return;
+        const categoryIndex = Number(event.target.dataset.galleryUpload);
+        const files = [...event.target.files];
+        if (!files.length) return;
+        try {
+          const images = await Promise.all(files.map(imageFileToDataURL));
+          if (!state.imageCategories[categoryIndex]) return;
+          state.imageCategories[categoryIndex].images.push(...images);
+          renderAll();
+          toast(`${images.length} imagen${images.length === 1 ? " agregada" : "es agregadas"} a la categoría.`);
+        } catch (error) {
+          toast("Una de las imágenes no pudo leerse.");
+        }
+      });
+
+      $("#paymentProofList").addEventListener("input", event => {
+        const card = event.target.closest("[data-proof-index]");
+        if (!card || !event.target.dataset.proofField) return;
+        const field = event.target.dataset.proofField;
+        state.paymentProofs[Number(card.dataset.proofIndex)][field] = field === "amount" ? Number(event.target.value) : event.target.value;
+        renderPreview();
+      });
+
+      $("#paymentProofList").addEventListener("change", async event => {
+        const card = event.target.closest("[data-proof-index]");
+        if (!card) return;
+        const index = Number(card.dataset.proofIndex);
+        if (event.target.dataset.proofField === "method") { renderAll(); return; }
+        if (!event.target.matches("[data-proof-upload]")) return;
+        try {
+          const image = await imageFileToDataURL(event.target.files[0]);
+          if (!state.paymentProofs[index]) return;
+          state.paymentProofs[index].image = image.src;
+          renderAll();
+          toast("Imagen del comprobante agregada.");
+        } catch (error) {
+          toast("Selecciona una imagen válida para el comprobante.");
+        }
+      });
+
+      inputs.forEach(id => {
+        const input = $("#" + id);
+        input.addEventListener("input", renderPreview);
+        input.addEventListener("change", renderPreview);
+      });
+
+      $("#addItem").addEventListener("click", () => { state.items.push({ title:"Nuevo servicio", description:"", qty:1, price:0 }); renderAll(); const cards = $$(".item-card"); cards[cards.length - 1]?.querySelector("input")?.focus(); });
+      $("#addScriptBlock").addEventListener("click", () => { state.scripts.push({ title:"Nuevo bloque", content:"" }); renderAll(); const cards = $$(".script-card"); cards[cards.length - 1]?.querySelector("input")?.focus(); });
+      $("#addImageCategory").addEventListener("click", () => { state.imageCategories.push({ name:`Categoría ${state.imageCategories.length + 1}`, images:[] }); renderAll(); const cards = $$(".gallery-category-card"); cards[cards.length - 1]?.querySelector("input[data-category-field]")?.focus(); });
+      $("#addPaymentProof").addEventListener("click", () => { state.paymentProofs.push({ title:"Comprobante de pago", amount:0, date:todayISO(), method:"deposit", bank:"LAFISE", depositor:"", reference:"", image:"" }); renderAll(); const cards = $$(".payment-proof-card"); cards[cards.length - 1]?.querySelector("input[data-proof-field]")?.focus(); });
+      $("#includeGallery").addEventListener("change", () => { if ($("#includeGallery").checked && !state.imageCategories.length) state.imageCategories.push({ name:"Categoría 1", images:[] }); renderAll(); });
+      $("#includePaymentProofs").addEventListener("change", () => { if ($("#includePaymentProofs").checked && !state.paymentProofs.length) state.paymentProofs.push({ title:"Comprobante de pago", amount:0, date:todayISO(), method:"deposit", bank:"LAFISE", depositor:"", reference:"", image:"" }); renderAll(); });
+      $("#backHome").addEventListener("click", () => showView("dashboard"));
+      $$(".settings-toggle").forEach(button => button.addEventListener("click", () => toggleSettingsPanel(button.dataset.settingsPanel)));
+      $("#settingsDone").addEventListener("click", () => { renderPreview(); closeSettingsPanels(); toast("Datos de la empresa aplicados."); });
+      $("#restoreBrand").addEventListener("click", restoreBrand);
+      $("#loginForm").addEventListener("submit", handleLogin);
+      $("#changePasswordButton").addEventListener("click", changePassword);
+      $("#registerUserButton").addEventListener("click", registerUser);
+      $("#logoutButton").addEventListener("click", logout);
+      $("#topLogoutButton").addEventListener("click", logout);
+      $("#userMenuButton").addEventListener("click", event => { event.stopPropagation(); toggleUserMenu(); });
+      document.addEventListener("click", event => { if (!$("#userMenu").contains(event.target)) closeUserMenu(); });
+      $("#clearForm").addEventListener("click", clearCurrentForm);
+      $("#saveDocumentButton").addEventListener("click", async () => {
+        try { await saveCurrentDocument(true); }
+        catch (error) { console.error(error); toast("No se pudo guardar el documento localmente.", 4200); }
+      });
+      $("#printButton").addEventListener("click", printDocument);
+      $("#printButtonSmall").addEventListener("click", printDocument);
+      $("#acceptSuccess").addEventListener("click", closeSuccessModal);
+      $("#closeArchivePreview").addEventListener("click", closeArchivePreview);
+      $("#editPreviewDocument").addEventListener("click", () => { if (state.previewRecordId) editArchivedDocument(state.previewRecordId); });
+      $("#exportArchiveButton").addEventListener("click", exportArchiveBackup);
+      $("#importArchiveButton").addEventListener("click", () => $("#archiveBackupInput").click());
+      $("#archiveBackupInput").addEventListener("change", event => importArchiveBackup(event.target.files[0]));
+      ["archiveSearch","archiveTypeFilter","archiveStatusFilter","archiveDateFrom","archiveDateTo"].forEach(id => {
+        $("#" + id).addEventListener("input", renderArchive);
+        $("#" + id).addEventListener("change", renderArchive);
+      });
+      $("#clearArchiveFilters").addEventListener("click", () => {
+        $("#archiveSearch").value = "";
+        $("#archiveTypeFilter").value = "all";
+        $("#archiveStatusFilter").value = "all";
+        $("#archiveDateFrom").value = "";
+        $("#archiveDateTo").value = "";
+        renderArchive();
+      });
+      document.addEventListener("keydown", event => {
+        if (event.key !== "Escape") return;
+        closeUserMenu();
+        if ($("#successModal").classList.contains("visible")) closeSuccessModal();
+        if ($("#archivePreviewModal").classList.contains("visible")) closeArchivePreview();
+      });
+      $("#logoInput").addEventListener("change", event => fileToDataURL(event.target.files[0], data => { state.brand.logo = data; renderPreview(); toast("Logotipo actualizado para esta sesión."); }));
+      $("#isotipoInput").addEventListener("change", event => fileToDataURL(event.target.files[0], data => { state.brand.isotipo = data; renderPreview(); toast("Isotipo actualizado para esta sesión."); }));
+      $("#signatureInput").addEventListener("change", event => fileToDataURL(event.target.files[0], data => { state.brand.signature = data; renderPreview(); toast("Firma agregada para esta sesión."); }));
+      $("#qrInput").addEventListener("change", event => fileToDataURL(event.target.files[0], data => { state.brand.qr = data; renderPreview(); toast("Código QR actualizado para esta sesión."); }));
+      $("#pdfInput").addEventListener("change", event => loadPdfFile(event.target.files[0]));
+      $("#pdfDocumentStatus").addEventListener("change", updatePdfPaymentFields);
+      $("#pdfPaymentMethod").addEventListener("change", updatePdfPaymentFields);
+      $("#documentStatus").addEventListener("change", updateDocumentPaymentFields);
+      $("#documentPaymentMethod").addEventListener("change", updateDocumentPaymentFields);
+      $("#pdfPageList").addEventListener("change", updatePdfSelectionLabel);
+      $("#selectAllPages").addEventListener("click", () => { $$("#pdfPageList input").forEach(input => input.checked = true); updatePdfSelectionLabel(); });
+      $("#keepOnlyLastPage").addEventListener("click", () => { const pages = $$("#pdfPageList input"); pages.forEach((input, index) => input.checked = index === pages.length - 1); if (pages.length) $("#pdfCommercialPage").value = String(pages.length - 1); updatePdfSelectionLabel(); });
+      $("#invertPages").addEventListener("click", () => { $$("#pdfPageList input").forEach(input => input.checked = !input.checked); updatePdfSelectionLabel(); });
+      $("#editImportedDocumentButton").addEventListener("click", editImportedDocument);
+      $("#processPdfButton").addEventListener("click", processImportedPdf);
+      const pdfDropZone = $("#pdfDropZone");
+      ["dragenter", "dragover"].forEach(name => pdfDropZone.addEventListener(name, event => { event.preventDefault(); pdfDropZone.classList.add("dragging"); }));
+      ["dragleave", "drop"].forEach(name => pdfDropZone.addEventListener(name, event => { event.preventDefault(); pdfDropZone.classList.remove("dragging"); }));
+      pdfDropZone.addEventListener("drop", event => loadPdfFile(event.dataTransfer.files[0]));
+      window.addEventListener("afterprint", () => {
+        const savedFilename = pendingPdfFilename;
+        const savedKind = pendingPdfKind;
+        document.title = "FactPro | Bienvenido";
+        pendingPdfFilename = "";
+        if (savedFilename) showSuccessModal(savedKind);
+      });
+
+      $("#issueDate").value = todayISO();
+      updateDocumentPaymentFields();
+      updatePdfPaymentFields();
+      renderAll();
+      initializeArchive()
+        .then(restored => {
+          if (restored) return;
+          $("#appLoader").classList.remove("visible");
+          $("#appLoader").setAttribute("aria-hidden", "true");
+          $("#loginScreen").classList.remove("hidden");
+          setTimeout(() => $("#loginUsername").focus(), 30);
+        })
+        .catch(error => {
+          console.error(error);
+          $("#loginError").textContent = "El navegador no pudo iniciar el acceso y el archivo local.";
+          $("#loginError").classList.add("visible");
+        });
+    })();
+  </script>
+</body>
+</html>
