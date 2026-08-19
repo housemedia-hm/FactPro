@@ -143,7 +143,7 @@
     .section-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin: 32px 0 16px; }
     .section-head h3 { margin: 0; font-size: 17px; letter-spacing: -.02em; }
     .section-head p { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
-    .doc-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .doc-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
     .doc-card {
       padding: 22px;
       min-height: 218px;
@@ -308,8 +308,8 @@
     .doc-table td { padding: 9px 6px 3px; vertical-align: top; }
     .line-title { font-weight: 700; }
     .line-description { margin-top: 3px; white-space: pre-wrap; line-height: 1.28; }
-    .totals-wrap { width: 215px; margin: 48px 0 0 auto; font-size: 14px; }
-    .total-line { display: grid; grid-template-columns: minmax(0, 1fr) 84px; align-items: center; gap: 12px; padding: 5px 10px; }
+    .totals-wrap { width: 175px; margin: 48px 0 0 auto; font-size: 14px; }
+    .total-line { display: grid; grid-template-columns: minmax(0, 1fr) 70px; align-items: center; gap: 8px; padding: 5px 8px; }
     .total-line strong { font-weight: 700; text-align: right; }
     .total-line span { text-align: right; }
     .total-line.grand { color: white !important; background: #242a35 !important; box-shadow: inset 0 0 0 1000px #242a35; font-size: 15px; }
@@ -384,6 +384,14 @@
     .archive-action.delete { color: var(--danger); background: #fff5f4; }
     .archive-empty { padding: 48px 20px; color: var(--muted); text-align: center; font-size: 12px; }
     .storage-note { margin-top: 12px; padding: 12px 14px; border-radius: 11px; color: #4f5967; background: #eef3f0; font-size: 10px; line-height: 1.5; }
+    .clients-layout { display: grid; grid-template-columns: minmax(280px, .72fr) minmax(520px, 1.28fr); gap: 18px; align-items: start; }
+    .client-form-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 17px; }
+    .client-search { padding: 14px; border-bottom: 1px solid var(--line); }
+    .client-search input { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid #dfe2e8; border-radius: 10px; color: var(--ink); background: white; font: inherit; font-size: 11px; }
+    .client-table { min-width: 720px; }
+    .client-contact strong { display: block; font-size: 10px; }
+    .client-contact span { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; }
+    .field-help { display: block; margin-top: 5px; color: var(--muted); font-size: 9px; line-height: 1.4; }
 
     .archive-preview-modal { position: fixed; inset: 0; z-index: 180; display: none; grid-template-rows: auto minmax(0, 1fr); background: rgba(19,21,28,.94); }
     .archive-preview-modal.visible { display: grid; }
@@ -457,7 +465,6 @@
     .login-form .primary-button { width: 100%; min-height: 44px; margin-top: 3px; }
     .login-error { display: none; padding: 10px 12px; border-radius: 9px; color: #8b2c25; background: #fff0ef; font-size: 10px; line-height: 1.4; }
     .login-error.visible { display: block; }
-    .login-foot { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; line-height: 1.5; text-align: center; }
     .app-loader { position: fixed; inset: 0; z-index: 450; display: none; place-items: center; color: white; background: var(--ink); }
     .app-loader.visible { display: grid; }
     .app-loader-content { display: grid; justify-items: center; gap: 14px; }
@@ -484,6 +491,7 @@
       .editor-scroll, .preview-stage { max-height: none; }
       .doc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .archive-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .clients-layout { grid-template-columns: 1fr; }
       .preview-stage .print-document { zoom: .95; }
     }
     @media (max-width: 860px) {
@@ -495,7 +503,7 @@
       .brand strong { font-size: 13px; }
       .brand span { font-size: 9px; }
       .nav-label { display: none; }
-      .nav { width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
+      .nav { width: 100%; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
       .nav-button { width: 100%; min-width: 0; min-height: 54px; padding: 7px 3px; flex-direction: column; justify-content: center; gap: 3px; text-align: center; white-space: normal; font-size: 9px; line-height: 1.15; }
       .nav-icon { width: auto; font-size: 16px; line-height: 1; }
       .topbar { padding: 18px 20px; }
@@ -518,6 +526,7 @@
       .form-grid { grid-template-columns: 1fr; }
       .field.full { grid-column: auto; }
       .item-grid { grid-template-columns: 1fr 1fr; }
+      .nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .item-grid .title-field, .item-grid .description-field { grid-column: 1 / -1; }
       .preview-stage { padding: 12px; overflow-x: auto; justify-content: start; }
       .preview-stage .print-document { justify-content: start; zoom: .5; }
@@ -546,7 +555,7 @@
         background: white !important;
       }
       .sidebar, .topbar, .workspace-header, .editor, .preview-toolbar,
-      #dashboardView, #documentsView, #settingsView, #importView, .toast, .success-modal, .archive-preview-modal { display: none !important; }
+      #dashboardView, #documentsView, #clientsView, #settingsView, #importView, .toast, .success-modal, .archive-preview-modal { display: none !important; }
       .app-shell, .main, .content, #workspaceView, .workspace-grid,
       .preview-panel, .preview-stage {
         position: static !important;
@@ -595,6 +604,7 @@
         <nav class="nav">
           <button class="nav-button active" data-route="dashboard"><span class="nav-icon">⌂</span>Inicio</button>
           <button class="nav-button" data-create="document"><span class="nav-icon">▤</span>Crear documento</button>
+          <button class="nav-button" data-route="clients"><span class="nav-icon">♙</span>Clientes</button>
           <button class="nav-button" data-route="documents"><span class="nav-icon">▥</span>Documentos</button>
           <button class="nav-button" data-route="import"><span class="nav-icon">⇧</span>Importar PDF</button>
           <button class="nav-button" data-route="settings"><span class="nav-icon">⚙</span>Ajustes</button>
@@ -623,11 +633,14 @@
             <article class="doc-card" data-create="document" tabindex="0" role="button">
               <div class="card-icon">▤</div><h4>Crear documento</h4><p>Selecciona entre factura o proforma y agrega hojas de guion cuando las necesites.</p><div class="card-action">Abrir generador →</div>
             </article>
-            <article class="doc-card" data-route="import" tabindex="0" role="button">
-              <div class="card-icon">⇧</div><h4>Importar PDF</h4><p>Valida un documento, elimina páginas de guion o convierte una proforma en factura.</p><div class="card-action">Procesar PDF →</div>
+            <article class="doc-card" data-route="clients" tabindex="0" role="button">
+              <div class="card-icon">♙</div><h4>Clientes</h4><p>Registra clientes frecuentes o utiliza datos libres al crear cada documento.</p><div class="card-action">Administrar clientes →</div>
             </article>
             <article class="doc-card" data-route="documents" tabindex="0" role="button">
               <div class="card-icon">▥</div><h4>Documentos</h4><p>Busca, filtra, consulta o edita las facturas y proformas almacenadas en este equipo.</p><div class="card-action">Abrir archivo →</div>
+            </article>
+            <article class="doc-card" data-route="import" tabindex="0" role="button">
+              <div class="card-icon">⇧</div><h4>Importar PDF</h4><p>Valida un documento, elimina páginas de guion o convierte una proforma en factura.</p><div class="card-action">Procesar PDF →</div>
             </article>
           </div>
         </section>
@@ -652,7 +665,7 @@
                     <div class="field full document-payment-field" id="documentPaymentMethodField"><label for="documentPaymentMethod">Tipo de pago</label><select id="documentPaymentMethod"><option value="cash">Efectivo</option><option value="deposit">Depósito</option></select></div>
                     <div class="field document-payment-field" id="documentPaymentBankField"><label for="documentPaymentBank">Banco</label><select id="documentPaymentBank"><option value="LAFISE">LAFISE</option><option value="BAC">BAC</option><option value="BANPRO">BANPRO</option><option value="FICOHSA">FICOHSA</option><option value="BDF">BDF</option><option value="AVANZ">AVANZ</option></select></div>
                     <div class="field document-payment-field" id="documentPaymentReferenceField"><label for="documentPaymentReference">Número de referencia</label><input id="documentPaymentReference" autocomplete="off" placeholder="Ej. 00128476"></div>
-                    <div class="field full"><label for="clientName">Nombre del cliente</label><input id="clientName" autocomplete="off"></div>
+                    <div class="field full"><label for="clientName">Nombre del cliente</label><input id="clientName" list="savedClientOptions" autocomplete="off"><datalist id="savedClientOptions"></datalist><small class="field-help">Selecciona un cliente registrado o escribe uno nuevo sin guardarlo.</small></div>
                     <div class="field full"><label for="concept">Concepto de</label><input id="concept" autocomplete="off"></div>
                     <div class="field full"><label for="city">Ciudad / País</label><input id="city" autocomplete="off"></div>
                   </div>
@@ -775,6 +788,37 @@
           <div class="storage-note"><strong>Archivo privado y local.</strong> Esta información permanece en este navegador. Usa “Exportar respaldo” periódicamente para conservar una copia si cambias de computadora o borras los datos del navegador.</div>
         </section>
 
+        <section class="view" id="clientsView">
+          <div class="documents-toolbar">
+            <div class="documents-toolbar-copy"><h3>Clientes</h3><p>Guarda clientes frecuentes para reutilizarlos rápidamente en facturas y proformas.</p></div>
+            <div class="documents-toolbar-actions"><button class="primary-button" id="newClientButton" type="button">+ Registrar cliente</button></div>
+          </div>
+          <div class="clients-layout">
+            <section class="editor" id="clientEditor">
+              <div class="panel-head"><h3 id="clientEditorTitle">Registrar cliente</h3><span>Datos opcionales excepto el nombre</span></div>
+              <div style="padding:20px">
+                <div class="form-grid">
+                  <div class="field full"><label for="savedClientName">Nombre o razón social</label><input id="savedClientName" autocomplete="off" placeholder="Nombre del cliente"></div>
+                  <div class="field"><label for="savedClientPhone">Teléfono</label><input id="savedClientPhone" type="tel" autocomplete="off"></div>
+                  <div class="field"><label for="savedClientTaxId">RUC / Identificación</label><input id="savedClientTaxId" autocomplete="off"></div>
+                  <div class="field full"><label for="savedClientEmail">Correo</label><input id="savedClientEmail" type="email" autocomplete="off"></div>
+                  <div class="field full"><label for="savedClientCity">Ciudad / País</label><input id="savedClientCity" autocomplete="off"></div>
+                  <div class="field full"><label for="savedClientNotes">Notas</label><textarea id="savedClientNotes" placeholder="Información interna opcional"></textarea></div>
+                </div>
+                <div class="client-form-actions"><button class="primary-button" id="saveClientButton" type="button">Guardar cliente</button><button class="secondary-button" id="cancelClientEditButton" type="button">Limpiar</button></div>
+              </div>
+            </section>
+            <section class="editor">
+              <div class="panel-head"><h3>Clientes registrados</h3><span id="clientCountLabel">0 clientes</span></div>
+              <div class="client-search"><input id="clientSearch" type="search" placeholder="Buscar por nombre, teléfono, correo o ciudad"></div>
+              <div class="archive-table-wrap">
+                <table class="archive-table client-table"><thead><tr><th>Cliente</th><th>Contacto</th><th>Ciudad / País</th><th>Actualizado</th><th>Acciones</th></tr></thead><tbody id="clientTableBody"></tbody></table>
+                <div class="archive-empty" id="clientEmpty">Todavía no hay clientes registrados.</div>
+              </div>
+            </section>
+          </div>
+        </section>
+
         <section class="view" id="settingsView">
           <div class="section-head" style="margin-top:0"><div><h3>Ajustes</h3><p>Administra los datos de empresa, tu contraseña y los usuarios de FactPro.</p></div></div>
           <div class="settings-actions" role="tablist" aria-label="Opciones de ajustes">
@@ -886,14 +930,13 @@
     <div class="login-card">
       <div class="login-brand"><div class="login-brand-mark"><img src="assets/house-media-isotipo.svg" alt="Isotipo House Media"></div><div><strong>FactPro</strong><span>House Media</span></div></div>
       <h1 id="loginTitle">Bienvenido</h1>
-      <p>Ingresa tus credenciales para acceder al generador y al archivo local de documentos.</p>
+      <p>Ingresa tus datos para acceder a FactPro y documentos.</p>
       <form class="login-form" id="loginForm">
         <div class="field"><label for="loginUsername">Usuario</label><input id="loginUsername" placeholder="Ingresa su usuario" autocomplete="username" required autofocus></div>
         <div class="field"><label for="loginPassword">Contraseña</label><input id="loginPassword" type="password" placeholder="Ingresa la contraseña" autocomplete="current-password" required></div>
         <div class="login-error" id="loginError" role="alert">Usuario o contraseña incorrectos.</div>
         <button class="primary-button" id="loginButton" type="submit">Iniciar sesión</button>
       </form>
-      <div class="login-foot">Acceso local. Tus credenciales y documentos permanecen únicamente en este navegador.</div>
     </div>
   </div>
   <div class="app-loader" id="appLoader" aria-hidden="true" aria-label="Cargando FactPro">
@@ -941,6 +984,8 @@
         authSettings: null,
         currentUser: null,
         registeredUsers: [],
+        clientRecords: [],
+        editingClientId: null,
         pdf: { file: null, bytes: null, document: null, pages: [], detectedType: "document", detectedStatus: "none", extractedData: null }
       };
 
@@ -1019,6 +1064,7 @@
       const archiveStoreName = "documents";
       const settingsStoreName = "settings";
       const usersStoreName = "users";
+      const clientsStoreName = "clients";
       const defaultLoginUsername = "HM.ADMIN";
       const defaultLoginPassword = "HMfactpro09";
       const sessionStorageKey = "FactProActiveUser";
@@ -1032,7 +1078,7 @@
         if (archiveDatabasePromise) return archiveDatabasePromise;
         archiveDatabasePromise = new Promise((resolve, reject) => {
           if (!window.indexedDB) { reject(new Error("El navegador no admite almacenamiento local avanzado.")); return; }
-          const request = indexedDB.open(archiveDatabaseName, 3);
+          const request = indexedDB.open(archiveDatabaseName, 4);
           request.onupgradeneeded = event => {
             const database = event.target.result;
             let documentStore;
@@ -1049,6 +1095,12 @@
               const userStore = database.createObjectStore(usersStoreName, { keyPath: "username" });
               userStore.createIndex("role", "role", { unique: false });
               userStore.createIndex("createdAt", "createdAt", { unique: false });
+            }
+            if (!database.objectStoreNames.contains(clientsStoreName)) {
+              const clientStore = database.createObjectStore(clientsStoreName, { keyPath: "id" });
+              clientStore.createIndex("ownerUsername", "ownerUsername", { unique: false });
+              clientStore.createIndex("name", "name", { unique: false });
+              clientStore.createIndex("updatedAt", "updatedAt", { unique: false });
             }
           };
           request.onsuccess = () => resolve(request.result);
@@ -1072,6 +1124,7 @@
       const archiveStoreRequest = (mode, operation) => localStoreRequest(archiveStoreName, mode, operation);
       const settingsStoreRequest = (mode, operation) => localStoreRequest(settingsStoreName, mode, operation);
       const usersStoreRequest = (mode, operation) => localStoreRequest(usersStoreName, mode, operation);
+      const clientsStoreRequest = (mode, operation) => localStoreRequest(clientsStoreName, mode, operation);
 
       const getArchivedDocuments = () => archiveStoreRequest("readonly", store => store.getAll());
       const getArchivedDocument = id => archiveStoreRequest("readonly", store => store.get(id));
@@ -1080,6 +1133,10 @@
       const getUser = username => usersStoreRequest("readonly", store => store.get(username));
       const getUsers = () => usersStoreRequest("readonly", store => store.getAll());
       const putUser = user => usersStoreRequest("readwrite", store => store.put(user));
+      const getClients = () => clientsStoreRequest("readonly", store => store.getAll());
+      const getClient = id => clientsStoreRequest("readonly", store => store.get(id));
+      const putClient = client => clientsStoreRequest("readwrite", store => store.put(client));
+      const removeClient = id => clientsStoreRequest("readwrite", store => store.delete(id));
 
       function authSalt() {
         if (window.crypto?.getRandomValues) {
@@ -1197,6 +1254,7 @@
           rememberSession(settings.username);
           updateAccessInterface();
           await refreshArchive();
+          await refreshClients();
           if (isMasterUser()) await renderRegisteredUsers();
           $("#loginPassword").value = "";
           $("#loginScreen").classList.add("hidden");
@@ -1256,12 +1314,17 @@
         state.currentUser = null;
         state.authSettings = null;
         state.archiveRecords = [];
+        state.clientRecords = [];
+        state.editingClientId = null;
         state.editingRecordId = null;
         state.previewRecordId = null;
         resetDocumentForm();
+        resetClientForm();
+        $("#clientSearch").value = "";
         resetImportedPdf();
         updateAccessInterface();
         renderArchive();
+        renderClients();
         renderAll();
         closeSettingsPanels();
         closeArchivePreview();
@@ -1383,6 +1446,124 @@
         state.imageCategories = cloneArchiveData(snapshot.imageCategories || []);
         state.paymentProofs = cloneArchiveData(snapshot.paymentProofs || []);
         updateDocumentPaymentFields();
+      }
+
+      function resetClientForm() {
+        state.editingClientId = null;
+        $("#savedClientName").value = "";
+        $("#savedClientPhone").value = "";
+        $("#savedClientTaxId").value = "";
+        $("#savedClientEmail").value = "";
+        $("#savedClientCity").value = "";
+        $("#savedClientNotes").value = "";
+        $("#clientEditorTitle").textContent = "Registrar cliente";
+        $("#saveClientButton").textContent = "Guardar cliente";
+      }
+
+      function filteredClients() {
+        const search = $("#clientSearch").value.trim().toLowerCase();
+        if (!search) return state.clientRecords;
+        return state.clientRecords.filter(client => [client.name, client.phone, client.email, client.taxId, client.city].join(" ").toLowerCase().includes(search));
+      }
+
+      function renderClients() {
+        const records = filteredClients();
+        $("#clientCountLabel").textContent = `${state.clientRecords.length} cliente${state.clientRecords.length === 1 ? "" : "s"}`;
+        $("#savedClientOptions").innerHTML = state.clientRecords.map(client => `<option value="${escapeHTML(client.name)}">${escapeHTML(client.city || client.phone || "Cliente registrado")}</option>`).join("");
+        $("#clientTableBody").innerHTML = records.map(client => `
+          <tr>
+            <td class="archive-document-name"><strong>${escapeHTML(client.name)}</strong><span>${escapeHTML(client.taxId || "Sin identificación")}</span></td>
+            <td class="client-contact"><strong>${escapeHTML(client.phone || "Sin teléfono")}</strong><span>${escapeHTML(client.email || "Sin correo")}</span></td>
+            <td>${escapeHTML(client.city || "Sin ciudad")}</td>
+            <td>${escapeHTML(archiveUpdatedLabel(client.updatedAt))}</td>
+            <td><div class="archive-actions"><button class="archive-action" data-use-client="${client.id}" type="button">Usar</button><button class="archive-action" data-edit-client="${client.id}" type="button">Editar</button><button class="archive-action delete" data-delete-client="${client.id}" type="button">Borrar</button></div></td>
+          </tr>`).join("");
+        $("#clientEmpty").style.display = records.length ? "none" : "block";
+      }
+
+      async function refreshClients() {
+        try {
+          const ownerUsername = state.currentUser?.username;
+          const records = ownerUsername ? (await getClients()).filter(client => client.ownerUsername === ownerUsername) : [];
+          state.clientRecords = records.sort((a, b) => String(a.name).localeCompare(String(b.name), "es", { sensitivity:"base" }));
+          renderClients();
+        } catch (error) {
+          console.error(error);
+          if ($("#clientsView").classList.contains("active")) toast("No se pudieron abrir los clientes guardados.", 4200);
+        }
+      }
+
+      async function saveClientRecord() {
+        if (!state.currentUser) { toast("Inicia sesión nuevamente.", 4200); return; }
+        const name = $("#savedClientName").value.trim();
+        if (!name) { toast("Escribe el nombre del cliente.", 3600); $("#savedClientName").focus(); return; }
+        const current = state.clientRecords.find(client => client.id === state.editingClientId);
+        const now = new Date().toISOString();
+        const client = {
+          id:state.editingClientId || createArchiveId(),
+          ownerUsername:state.currentUser.username,
+          name,
+          phone:$("#savedClientPhone").value.trim(),
+          taxId:$("#savedClientTaxId").value.trim(),
+          email:$("#savedClientEmail").value.trim(),
+          city:$("#savedClientCity").value.trim(),
+          notes:$("#savedClientNotes").value.trim(),
+          createdAt:current?.createdAt || now,
+          updatedAt:now
+        };
+        try {
+          await putClient(client);
+          resetClientForm();
+          await refreshClients();
+          toast("Cliente guardado correctamente.");
+        } catch (error) {
+          console.error(error);
+          toast("No se pudo guardar el cliente.", 4200);
+        }
+      }
+
+      function editClientRecord(id) {
+        const client = state.clientRecords.find(item => item.id === id);
+        if (!client) return;
+        state.editingClientId = id;
+        $("#savedClientName").value = client.name || "";
+        $("#savedClientPhone").value = client.phone || "";
+        $("#savedClientTaxId").value = client.taxId || "";
+        $("#savedClientEmail").value = client.email || "";
+        $("#savedClientCity").value = client.city || "";
+        $("#savedClientNotes").value = client.notes || "";
+        $("#clientEditorTitle").textContent = "Editar cliente";
+        $("#saveClientButton").textContent = "Actualizar cliente";
+        $("#clientEditor").scrollIntoView({ behavior:"smooth", block:"start" });
+        setTimeout(() => $("#savedClientName").focus(), 250);
+      }
+
+      async function deleteClientRecord(id) {
+        const client = state.clientRecords.find(item => item.id === id);
+        if (!client || !confirm(`¿Deseas borrar al cliente ${client.name}?`)) return;
+        await removeClient(id);
+        if (state.editingClientId === id) resetClientForm();
+        await refreshClients();
+        toast("Cliente eliminado.");
+      }
+
+      function useClientInDocument(id) {
+        const client = state.clientRecords.find(item => item.id === id);
+        if (!client) return;
+        resetDocumentForm();
+        $("#clientName").value = client.name || "";
+        $("#city").value = client.city || "";
+        renderAll();
+        showView("workspace");
+        toast("Cliente agregado al nuevo documento.");
+      }
+
+      function applySavedClientSuggestion() {
+        const name = $("#clientName").value.trim().toLowerCase();
+        const client = state.clientRecords.find(item => item.name.trim().toLowerCase() === name);
+        if (!client) return;
+        $("#city").value = client.city || "";
+        renderPreview();
       }
 
       function archiveAmount(record) {
@@ -1525,7 +1706,8 @@
 
       async function exportArchiveBackup() {
         await refreshArchive();
-        const payload = { app:"FactPro", version:2, ownerUsername:state.currentUser?.username, exportedAt:new Date().toISOString(), records:state.archiveRecords };
+        await refreshClients();
+        const payload = { app:"FactPro", version:3, ownerUsername:state.currentUser?.username, exportedAt:new Date().toISOString(), records:state.archiveRecords, clients:state.clientRecords };
         const blob = new Blob([JSON.stringify(payload)], { type:"application/json" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -1549,8 +1731,16 @@
             const id = existing && existing.ownerUsername !== state.currentUser?.username ? createArchiveId() : record.id;
             await putArchivedDocument({ ...record, id, ownerUsername:state.currentUser.username });
           }
+          const clients = Array.isArray(payload.clients) ? payload.clients : [];
+          for (const client of clients) {
+            if (!client?.id || !client?.name) continue;
+            const existing = await getClient(client.id);
+            const id = existing && existing.ownerUsername !== state.currentUser?.username ? createArchiveId() : client.id;
+            await putClient({ ...client, id, ownerUsername:state.currentUser.username });
+          }
           await refreshArchive();
-          toast(`${payload.records.length} documento${payload.records.length === 1 ? " restaurado" : "s restaurados"}.`, 4200);
+          await refreshClients();
+          toast(`${payload.records.length} documento${payload.records.length === 1 ? " restaurado" : "s restaurados"} y ${clients.length} cliente${clients.length === 1 ? "" : "s"}.`, 4800);
         } catch (error) {
           toast("El archivo seleccionado no es un respaldo válido de FactPro.", 4200);
         } finally {
@@ -1621,6 +1811,12 @@
           $("#pageTitle").textContent = "Documentos guardados";
           $("#pageSubtitle").textContent = "Consulta y administra tu archivo local.";
           refreshArchive();
+        } else if (name === "clients") {
+          $("#clientsView").classList.add("active");
+          $('[data-route="clients"]').classList.add("active");
+          $("#pageTitle").textContent = "Clientes";
+          $("#pageSubtitle").textContent = "Registra clientes frecuentes o utiliza datos libres en cada documento.";
+          refreshClients();
         } else {
           $("#workspaceView").classList.add("active");
           $('[data-create="document"]').classList.add("active");
@@ -2515,6 +2711,12 @@
         if (editRecord) { editArchivedDocument(editRecord.dataset.editRecord); return; }
         const deleteRecord = event.target.closest("[data-delete-record]");
         if (deleteRecord) { deleteArchivedDocument(deleteRecord.dataset.deleteRecord); return; }
+        const useClient = event.target.closest("[data-use-client]");
+        if (useClient) { useClientInDocument(useClient.dataset.useClient); return; }
+        const editClient = event.target.closest("[data-edit-client]");
+        if (editClient) { editClientRecord(editClient.dataset.editClient); return; }
+        const deleteClient = event.target.closest("[data-delete-client]");
+        if (deleteClient) { deleteClientRecord(deleteClient.dataset.deleteClient); return; }
         const removeItem = event.target.closest("[data-remove-item]");
         if (removeItem) { state.items.splice(Number(removeItem.dataset.removeItem), 1); renderAll(); return; }
         const removeScript = event.target.closest("[data-remove-script]");
@@ -2613,6 +2815,11 @@
       $("#includeGallery").addEventListener("change", () => { if ($("#includeGallery").checked && !state.imageCategories.length) state.imageCategories.push({ name:"Categoría 1", images:[] }); renderAll(); });
       $("#includePaymentProofs").addEventListener("change", () => { if ($("#includePaymentProofs").checked && !state.paymentProofs.length) state.paymentProofs.push({ title:"Comprobante de pago", amount:0, date:todayISO(), method:"deposit", bank:"LAFISE", depositor:"", reference:"", image:"" }); renderAll(); });
       $("#backHome").addEventListener("click", () => showView("dashboard"));
+      $("#newClientButton").addEventListener("click", () => { resetClientForm(); $("#savedClientName").focus(); });
+      $("#saveClientButton").addEventListener("click", saveClientRecord);
+      $("#cancelClientEditButton").addEventListener("click", resetClientForm);
+      $("#clientSearch").addEventListener("input", renderClients);
+      $("#clientName").addEventListener("change", applySavedClientSuggestion);
       $$(".settings-toggle").forEach(button => button.addEventListener("click", () => toggleSettingsPanel(button.dataset.settingsPanel)));
       $("#settingsDone").addEventListener("click", () => { renderPreview(); closeSettingsPanels(); toast("Datos de la empresa aplicados."); });
       $("#restoreBrand").addEventListener("click", restoreBrand);

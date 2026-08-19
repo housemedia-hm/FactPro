@@ -42,6 +42,13 @@ const checks = [
   "topLogoutButton",
   "sessionStorageKey",
   "restoreActiveSession",
+  "clientsView",
+  "clientsStoreName",
+  "Registrar cliente",
+  "savedClientOptions",
+  "clientTableBody",
+  "saveClientRecord",
+  "applySavedClientSuggestion",
   "logoutButton",
   "passwordHash",
   "SHA-256",
@@ -123,16 +130,16 @@ if (!html.includes('`${label}#${filenamePart(number, "SinNumero")}-${client}.pdf
 if (!html.includes('Archivo</span><strong>${escapeHTML(file.name)}</strong></div>\n            <div class="validation-card status-card')) throw new Error("El estado actual debe mostrarse inmediatamente después del archivo.");
 if (!html.includes("const titleSize = 17.25")) throw new Error("El título procesado debe conservar su escala de impresión.");
 if (!html.includes('const paymentChanged = originalPayment.method !== requestedPayment.method')) throw new Error("Los cambios de pago deben activar el procesamiento del PDF.");
-if (!html.includes('.totals-wrap { width: 215px;')) throw new Error("El bloque de totales debe mantenerse compacto y alineado con Cant.");
+if (!html.includes('.totals-wrap { width: 175px;')) throw new Error("El bloque de totales debe mantenerse compacto y alineado con Cant.");
 if (!html.includes('commercialDocumentHTML() + galleryHTML() + paymentProofsHTML()')) throw new Error("Las hojas opcionales deben imprimirse después de la factura o proforma.");
 if (!html.includes('grid-template-columns: repeat(var(--image-count), minmax(0, 1fr))')) throw new Error("La galería debe ajustar sus imágenes horizontalmente.");
 if (!html.includes('state.imageCategories = []') || !html.includes('state.paymentProofs = []')) throw new Error("Los anexos deben vaciarse al limpiar el documento.");
 if (!html.includes('Promise.all(files.map(imageFileToDataURL))')) throw new Error("La galería debe permitir cargar varias imágenes a la vez.");
 if (html.includes('.totals-wrap { width: 310px;')) throw new Error("El bloque de totales anterior era demasiado ancho.");
-if (!html.includes('.nav { width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr))')) throw new Error("Falta la navegación adaptable de cinco módulos.");
+if (!html.includes('.nav { width: 100%; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr))')) throw new Error("Falta la navegación adaptable de seis módulos.");
 if (!html.includes('await saveCurrentDocument(false)')) throw new Error("Generar PDF debe guardar primero el documento en el archivo local.");
 if (!html.includes('navigator.storage?.persist?.()')) throw new Error("FactPro debe solicitar persistencia del almacenamiento local.");
-if (!html.includes('indexedDB.open(archiveDatabaseName, 3)')) throw new Error("La base local debe incluir usuarios y propiedad individual de documentos.");
+if (!html.includes('indexedDB.open(archiveDatabaseName, 4)')) throw new Error("La base local debe incluir usuarios, documentos y clientes individuales.");
 if (!html.includes('await ensureAuthSettings()')) throw new Error("El inicio debe preparar las credenciales locales.");
 if (!html.includes('$("#loginForm").addEventListener("submit", handleLogin)')) throw new Error("Falta activar el formulario de inicio de sesión.");
 if (!html.includes('sessionStorage.setItem(sessionStorageKey, username)') || !html.includes('sessionStorage.removeItem(sessionStorageKey)')) throw new Error("La sesión debe conservarse al actualizar y eliminarse al cerrar sesión.");
@@ -144,6 +151,10 @@ if (/<input id="loginPassword"[^>]*\bautofocus\b/.test(html)) throw new Error("L
 if (!html.includes('id="loggedInUsername"') || !html.includes('$("#loggedInUsername").textContent = username')) throw new Error("La barra superior debe mostrar el usuario autenticado.");
 if (!html.includes('record.ownerUsername === ownerUsername')) throw new Error("El archivo debe filtrar los documentos por el usuario autenticado.");
 if (!html.includes('ownerUsername: state.currentUser.username')) throw new Error("Cada documento nuevo debe guardar su usuario propietario.");
+if (!html.includes('client.ownerUsername === ownerUsername')) throw new Error("Los clientes deben filtrarse por el usuario autenticado.");
+if (!html.includes('Selecciona un cliente registrado o escribe uno nuevo sin guardarlo.')) throw new Error("El documento debe permitir clientes registrados y clientes libres.");
+if (!html.includes('Ingresa tus datos para acceder a FactPro y documentos.')) throw new Error("Falta el nuevo texto de acceso.");
+if (html.includes('Acceso local. Tus credenciales y documentos permanecen únicamente en este navegador.')) throw new Error("Debe eliminarse el aviso inferior del login.");
 if (!html.includes('Solo HM.ADMIN puede registrar usuarios.')) throw new Error("El registro de usuarios debe estar restringido a la cuenta maestra.");
 if (html.includes("Archivo local activo") || html.includes("privacy-note")) throw new Error("Debe eliminarse el indicador y el cuadro informativo local anteriores.");
 if (/No usa base de datos ni conserva la información|Tus datos solo viven durante esta sesión|Sin conexión · sin base de datos/.test(html)) throw new Error("La interfaz todavía comunica el comportamiento anterior sin archivo local.");
